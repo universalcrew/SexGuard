@@ -17,6 +17,7 @@ PHP >= 7.0 required.
 - [x] **Turanic**
 - [x] **Tesseract**
 - [x] **BlueLight**
+- [x] **DarkSystem**
 
 ### Plugin permissions.
 
@@ -45,6 +46,7 @@ Telegram: https://t.me/joinchat/EbZB3BKGfsu0DdbDNmpPjg
 - [x] **Turanic**
 - [x] **Tesseract**
 - [x] **BlueLight**
+- [x] **DarkSystem**
 
 ### Особенности:
 
