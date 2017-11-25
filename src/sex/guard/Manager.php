@@ -343,8 +343,8 @@ class Manager extends PluginBase
 	 */
 	function getValue( string $key, string $type = 'message' )
 	{
-		$type = strtolower($type);
-		$key  = strtolower($key);
+		$type = mb_strtolower($type);
+		$key  = mb_strtolower($key);
 		
 		if( $type == 'config' )
 		{
