@@ -185,7 +185,9 @@ class Manager extends PluginBase
 		$z     = $pos->getFloorZ();
 		$level = $pos->getLevel()->getName();
 
-		for( $i = count($this->data) - 1; $i >= 0; $i-- ) // sqlite sucks.
+		end($this->data);
+
+		for( $i = key($this->data); $i >= 0; $i-- ) // sqlite sucks.
 		{
 			if( !isset($this->data[$i]) )
 			{
