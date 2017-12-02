@@ -14,7 +14,6 @@
  */
 use sex\guard\data\Region;
 
-use sex\guard\listener\LevelGuard;
 use sex\guard\listener\BlockGuard;
 use sex\guard\listener\EntityGuard;
 use sex\guard\listener\PlayerGuard;
