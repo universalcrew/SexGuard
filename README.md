@@ -19,6 +19,14 @@ PHP >= 7.0 required.
 - [x] **BlueLight**
 - [x] **DarkSystem**
 
+### Features:
+
+- Regions search system allows owners to create region in bigger region for comfortable markup of areas;
+- Ability to fine tune parameters of regions (flags), you can prevent players to using certain flags
+- Ability to tune parameters of size and count of regions per-player, also list of ignored flag and protected regions for certain groups from PurePerms and UniversalGroup
+- Ability to sell regions through the place of sign with using EconomyAPI or UniversalMoney.
+- Ability to change every message
+
 ### Plugin permissions.
 
 Permission | Description | Default
