@@ -14,6 +14,8 @@
  */
 use sex\guard\data\Region;
 
+use sex\guard\util\Config;
+
 use sex\guard\listener\BlockGuard;
 use sex\guard\listener\EntityGuard;
 use sex\guard\listener\PlayerGuard;
@@ -35,7 +37,6 @@ use sex\guard\command\argument\FlagArgument;
 use pocketmine\permission\Permission;
 use pocketmine\plugin\PluginBase;
 use pocketmine\level\Position;
-use pocketmine\utils\Config;
 use pocketmine\Player;
 
 /**
@@ -53,7 +54,7 @@ use Exception;
  */
 class Manager extends PluginBase
 {
-	const CONFIGURATION_SIGN = '2b44928ae11fb9384c4cf38708677c48'; // 115.
+	const CONFIGURATION_SIGN = '2b44928ae11fb9384c4cf38708677c48';
 
 	const DEFAULT_FLAG = [
 		'interact' => TRUE,
@@ -518,8 +519,8 @@ class Manager extends PluginBase
 		$this->sign   = new Config($folder. 'sign.json');
 		$this->region = new Config($folder. 'region.json');
 
-		$this->sign->reload();   // blame
-		$this->region->reload(); // pocketmine.
+		$this->sign->reload();
+		$this->region->reload();
 		
 		foreach( $this->region->getAll() as $name => $data )
 		{
@@ -558,6 +559,15 @@ class Manager extends PluginBase
 			'list'   => new ListArgument($this),
 			'wand'   => new WandArgument($this)
 		];
+
+		$map     = $this->getServer()->getCommandMap();
+		$command = $map->getCommand('rg');
+
+		if( isset($command) )
+		{
+			$command->setLabel('');
+			$command->unregister($map);
+		}
 
 		try
 		{

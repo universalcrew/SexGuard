@@ -109,6 +109,11 @@ class PlayerGuard extends Manager implements Listener
 	 */
 	function onTouch( PlayerInteractEvent $event )
 	{
+		if( $event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK )
+		{
+			return; // thx Yexeed.
+		}
+
 		if( $event->isCancelled() )
 		{
 			return;
