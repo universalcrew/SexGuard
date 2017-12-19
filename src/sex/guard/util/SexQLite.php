@@ -29,6 +29,8 @@ class SexQLite
 	 * /___/\__, |_|_||___\___/
 	 *         |_|
 	 *
+	 * @param string $database
+	 *
 	 * @return SQLite3
 	 */
 	static function connect( string $database ): SQLite3
