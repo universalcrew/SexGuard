@@ -69,12 +69,6 @@ class RemoveArgument extends Manager
 			return FALSE;
 		}
 		
-		if( !isset($region) )
-		{
-			$sender->sendMessage($api->getValue('rg_not_exist'));
-			return FALSE;
-		}
-		
 		if( $region->getOwner() != $nick and !$sender->hasPermission('sexguard.all') )
 		{
 			$sender->sendMessage($api->getValue('player_not_owner'));
