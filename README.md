@@ -6,7 +6,7 @@
 
 ## English (need help with translation).
 
-PHP >= 7.0 required.
+This plugin works only on PHP >= 7.0 and PocketMine-MP server software or any fork of it. We guarantee support both new and old versions.
 
 ### Tested on:
 
