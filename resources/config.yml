@@ -37,7 +37,7 @@
 #   удалите его - он восстановится
 #   при включении плагина.
 ###
-sign: 2b44928ae11fb9384c4cf38708677c48
+sign: 5856cd0ba5aac216328752e444c9565c
 
 
 ###
@@ -162,6 +162,7 @@ warn_type: 2
 # INTERACT: открывание сундуков, нажатие кнопок и т.п.
 # TELEPORT: телепортация из региона.
 # EXPLODE:  любые взрывы внутри региона.
+# CHANGE:   изменение региона существами.
 # BUCKET:   использование ведер.
 # DAMAGE:   получение урона от внешнего мира.
 # CHEST:    открывание сундуков.
@@ -187,6 +188,7 @@ allowed_flag:
   interact: true
   teleport: true
   explode: false
+  change: false
   bucket: false
   damage: true
   chest: false

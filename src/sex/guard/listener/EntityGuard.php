@@ -21,6 +21,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityExplodeEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\EntityBlockChangeEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 
@@ -148,6 +149,30 @@ class EntityGuard extends Manager implements Listener
 		$entity = $event->getEntity();
 		
 		if( $this->isFlagDenied($entity, 'teleport') )
+		{
+			$event->setCancelled();
+		}
+	}
+
+
+	/**
+	 * @internal change flag.
+	 *
+	 * @param    EntityBlockChangeEvent $event
+	 *
+	 * @priority        NORMAL
+	 * @ignoreCancelled FALSE
+	 */
+	function onBlockChange( EntityBlockChangeEvent $event )
+	{
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+		
+		$entity = $event->getEntity();
+		
+		if( $this->isFlagDenied($entity, 'change') )
 		{
 			$event->setCancelled();
 		}
