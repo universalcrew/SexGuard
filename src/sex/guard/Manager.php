@@ -347,7 +347,7 @@ class Manager extends PluginBase
 
 				unset($this->data[$level][$key]);
 
-				$this->data = array_values($this->data);
+				$this->data[$level] = array_values($this->data[$level]);
 
 				$this->region->remove($name);
 				$this->region->save(TRUE);
