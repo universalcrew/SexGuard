@@ -346,7 +346,7 @@ class Manager extends PluginBase
 	 */
 	function getValue( string $key, string $type = 'message' )
 	{
-		$type = mb_strtolower($type);
+		$type = strtolower($type);
 		$key  = mb_strtolower($key);
 		
 		if( $type == 'config' )
@@ -414,7 +414,7 @@ class Manager extends PluginBase
 	 */
 	protected function getAllowedFlag( ): array
 	{
-		$flag = array_map('mb_strtolower', array_keys($this->getValue('allowed_flag', 'config')));
+		$flag = array_map('strtolower', array_keys($this->getValue('allowed_flag', 'config')));
 
 		foreach( $flag as $key )
 		{
@@ -582,7 +582,7 @@ class Manager extends PluginBase
 
 		finally
 		{
-			$this->getServer()->getCommandMap()->register('sexGuard', $command);
+			$this->getServer()->getCommandMap()->register('SexGuard', $command);
 		}
 	}
 

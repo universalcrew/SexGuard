@@ -16,7 +16,6 @@ use sex\guard\Manager;
 
 use pocketmine\Player;
 use pocketmine\item\Item;
-//  pocketmine\item\ItemIds;
 
 
 class WandArgument extends Manager
@@ -51,9 +50,8 @@ class WandArgument extends Manager
 	 */
 	function execute( Player $sender, array $args ): bool
 	{
-		$nick = strtolower($sender->getName());
 		$api  = $this->api;
-		$wand = Item::get(271 /*ItemIds::WOODEN_AXE*/);
+		$wand = Item::get(Item::WOODEN_AXE);
 		
 		if( !$sender->getInventory()->canAddItem($wand) )
 		{

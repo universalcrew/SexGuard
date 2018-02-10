@@ -29,7 +29,7 @@ class SexQLite
 	 * /___/\__, |_|_||___\___/
 	 *         |_|
 	 *
-	 * @param string $database
+	 * @param  string $database
 	 *
 	 * @return SQLite3
 	 */

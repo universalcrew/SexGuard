@@ -15,9 +15,7 @@
 use sex\guard\Manager;
 
 use pocketmine\Player;
-use pocketmine\item\Item;
 use pocketmine\block\Block;
-//  pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\tile\ItemFrame;
 
@@ -160,7 +158,7 @@ class BlockGuard extends Manager implements Listener
 		$player = $event->getPlayer();
 		$block  = $event->getBlock();
 
-		if( $block->getId() == 54 /*ItemIds::CHEST*/ )
+		if( $block->getId() == Block::CHEST )
 		{
 			$flag = 'chest';
 		}
@@ -171,7 +169,7 @@ class BlockGuard extends Manager implements Listener
 			return;
 		}
 
-		if( $block->getId() != 63 /*ItemIds::SIGN_POST*/ and $block->getId() != 68 /*ItemIds::WALL_SIGN*/ )
+		if( $block->getId() != Block::SIGN_POST and $block->getId() != Block::WALL_SIGN )
 		{
 			return;
 		}

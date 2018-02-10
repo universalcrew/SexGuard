@@ -15,8 +15,8 @@
 use sex\guard\Manager;
 
 use pocketmine\Player;
+use pocketmine\item\Item;
 use pocketmine\block\Block;
-//  pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
 
@@ -124,7 +124,7 @@ class PlayerGuard extends Manager implements Listener
 		$nick   = strtolower($player->getName());
 		$api    = $this->api;
 		
-		if( $block->getId() == 63 /*ItemIds::SIGN_POST*/ or $block->getId() == 68 /*ItemIds::WALL_SIGN*/ )
+		if( $block->getId() == Block::SIGN_POST or $block->getId() == Block::WALL_SIGN )
 		{
 			if( count($api->sign->getAll()) == 0 or $api->getValue('allow_sell', 'config') === FALSE )
 			{
@@ -184,7 +184,7 @@ class PlayerGuard extends Manager implements Listener
 						$economy->addMoney($region->getOwner(), $price);
 						$region->setOwner($nick);
 						$api->sign->remove($name);
-						$block->getLevel()->setBlock($pos, Block::get(0 /*ItemIds::AIR*/));
+						$block->getLevel()->setBlock($pos, Block::get(Block::AIR));
 						
 						$api->sendWarning($player, str_replace('{region}', $region->getRegionName(), $api->getValue('player_buy_rg')));
 					}
@@ -201,7 +201,7 @@ class PlayerGuard extends Manager implements Listener
 		
 		$item = $event->getItem();
 		
-		if( $item->getId() == 280 /*ItemIds::STICK*/ )
+		if( $item->getId() == Item::STICK )
 		{
 			$event->setCancelled();
 
@@ -221,7 +221,7 @@ class PlayerGuard extends Manager implements Listener
 			return;
 		}
 
-		if( $item->getId() == 271 /*ItemIds::WOODEN_AXE*/ )
+		if( $item->getId() == Item::WOODEN_AXE )
 		{
 			$event->setCancelled();
 
@@ -280,7 +280,7 @@ class PlayerGuard extends Manager implements Listener
 			}
 		}
 
-		if( $block->getId() == 54 /*ItemIds::CHEST*/ )
+		if( $block->getId() == Block::CHEST )
 		{
 			$flag = 'chest';
 		}

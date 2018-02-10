@@ -81,7 +81,7 @@ class NewGuardCommand extends Command
 			return FALSE;
 		}
 		
-		$args = array_map('mb_strtolower', $args);
+		$args = array_map('strtolower', $args);
 		$name = array_shift($args);
 		
 		if( !in_array($name, array_keys($this->argument)) )
