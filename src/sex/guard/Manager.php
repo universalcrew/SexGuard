@@ -83,7 +83,7 @@ class Manager extends PluginBase
 	/**
 	 * @todo better store $data in provider.
 	 *
-	 * @var Region[]
+	 * @var Region[][]
 	 */
 	protected $data = [];
 
@@ -145,18 +145,30 @@ class Manager extends PluginBase
 	 */
 	function getOverride( Position $min, Position $max ): array
 	{
-		if( count($this->data) == 0 )
+		$level = $min->getLevel()->getName();
+
+		if( $level != $max->getLevel()->getName() )
 		{
 			return [];
 		}
 
+		if( !isset($this->data[$level]) )
+		{
+			return [];
+		}
+
+		$data = $this->data[$level];
+
+		if( count($data) == 0 )
+		{
+			unset($data); return [];
+		}
+
 		$arr = [];
 		
-		foreach( $this->data as $rg )
+		foreach( $data as $rg )
 		{
-			if( // check level first.
-				$rg->getLevelName() == $min->getLevel()->getName() and
-				$rg->getLevelName() == $max->getLevel()->getName() and
+			if(
 				$rg->getMin('x') <= $max->getX() and $min->getX() <= $rg->getMax('x') and
 				$rg->getMin('y') <= $max->getY() and $min->getY() <= $rg->getMax('y') and
 				$rg->getMin('z') <= $max->getZ() and $min->getZ() <= $rg->getMax('z')
@@ -165,7 +177,7 @@ class Manager extends PluginBase
 			}
 		}
 
-		return $arr;
+		unset($data); return $arr;
 	}
 
 
@@ -176,38 +188,45 @@ class Manager extends PluginBase
 	 */
 	function getRegion( Position $pos )
 	{
-		if( count($this->data) == 0 )
+		$level = $pos->getLevel()->getName();
+
+		if( !isset($this->data[$level]) )
 		{
 			return NULL;
 		}
-		
-		$x     = $pos->getFloorX();
-		$y     = $pos->getFloorY();
-		$z     = $pos->getFloorZ();
-		$level = $pos->getLevel()->getName();
 
-		end($this->data);
+		$data = $this->data[$level];
 
-		for( $i = key($this->data); $i >= 0; $i-- ) // sqlite sucks.
+		if( count($data) == 0 )
 		{
-			if( !isset($this->data[$i]) )
+			unset($data); return NULL;
+		}
+		
+		$x = $pos->getFloorX();
+		$y = $pos->getFloorY();
+		$z = $pos->getFloorZ();
+
+		end($data);
+
+		for( $i = key($data); $i >= 0; $i-- ) // sqlite sucks.
+		{
+			if( !isset($data[$i]) )
 			{
 				continue;
 			}
 
-			$rg = $this->data[$i];
+			$rg = $data[$i];
 
 			if(
-				$rg->getLevelName() == $level and
 				$rg->getMin('x') <= $x and $x <= $rg->getMax('x') and
 				$rg->getMin('y') <= $y and $y <= $rg->getMax('y') and
 				$rg->getMin('z') <= $z and $z <= $rg->getMax('z')
 			) {
-				return $rg;
+				unset($data); return $rg;
 			}
 		}
 
-		return NULL;
+		unset($data); return NULL;
 	}
 
 
@@ -218,22 +237,36 @@ class Manager extends PluginBase
 	 */
 	function getRegionByName( string $name )
 	{
-		if( count($this->data) == 0 )
+		$name = strtolower($name);
+
+		foreach( $this->getServer()->getLevels() as $level )
 		{
-			return NULL;
-		}
-		
-		foreach( $this->data as $rg )
-		{
-			if( $rg->getRegionName() != $name )
+			$level = $level->getName();
+
+			if( !isset($this->data[$level]) )
 			{
 				continue;
 			}
 
-			return $rg;
+			$data = $this->data[$level];
+
+			if( count($data) == 0 )
+			{
+				unset($data); continue;
+			}
+
+			foreach( $data as $rg )
+			{
+				if( $rg->getRegionName() != $name )
+				{
+					continue;
+				}
+
+				unset($data); return $rg;
+			}
 		}
 
-		return NULL;
+		unset($data); return NULL;
 	}
 
 
@@ -245,9 +278,9 @@ class Manager extends PluginBase
 	 */
 	function createRegion( string $nick, string $name, Position $min, Position $max )
 	{
-		$lvl  = $min->getLevel()->getName();
-		$nick = strtolower($nick);
-		$name = strtolower($name);
+		$level = $min->getLevel()->getName();
+		$nick  = strtolower($nick);
+		$name  = strtolower($name);
 
 		if( $this->getValue('full_height', 'config') === TRUE )
 		{
@@ -258,7 +291,7 @@ class Manager extends PluginBase
 		$data = [
 			'owner'  => $nick,
 			'member' => [],
-			'level'  => $lvl,
+			'level'  => $level,
 			'min'    => [
 				'x' => $min->getX(),
 				'y' => $min_y ?? $min->getY(),
@@ -272,7 +305,7 @@ class Manager extends PluginBase
 			'flag'   => $this->getValue('allowed_flag', 'config')
 		];
 		
-		$this->data[] = new Region($this, $name, $data);
+		$this->data[$level][] = new Region($this, $name, $data);
 		
 		unset($this->position[0][$nick]);
 		unset($this->position[1][$nick]);
@@ -289,23 +322,41 @@ class Manager extends PluginBase
 	{
 		$name = strtolower($name);
 
-		foreach( $this->data as $key => $rg )
+		foreach( $this->getServer()->getLevels() as $level )
 		{
-			if( $rg->getRegionName() != $name )
+			$level = $level->getName();
+
+			if( !isset($this->data[$level]) )
 			{
 				continue;
 			}
 
-			unset($this->data[$key]);
+			$data = $this->data[$level];
 
-			$this->data = array_values($this->data);
+			if( count($data) == 0 )
+			{
+				unset($data); continue;
+			}
 
-			$this->region->remove($name);
-			$this->region->save(TRUE);
-			return TRUE;
+			foreach( $data as $key => $rg )
+			{
+				if( $rg->getRegionName() != $name )
+				{
+					continue;
+				}
+
+				unset($this->data[$level][$key]);
+
+				$this->data = array_values($this->data);
+
+				$this->region->remove($name);
+				$this->region->save(TRUE);
+
+				unset($data); return TRUE;
+			}
 		}
 
-		return FALSE;
+		unset($data); return FALSE;
 	}
 
 
@@ -316,23 +367,35 @@ class Manager extends PluginBase
 	 */
 	function getRegionList( string $nick ): array
 	{
-		if( count($this->data) == 0 )
-		{
-			return [];
-		}
-		
 		$nick = strtolower($nick);
 		$arr  = [];
-		
-		foreach( $this->data as $rg )
+
+		foreach( $this->getServer()->getLevels() as $level )
 		{
-			if( $rg->getOwner() == $nick )
+			$level = $level->getName();
+
+			if( !isset($this->data[$level]) )
 			{
-				$arr[] = $rg;
+				continue;
+			}
+
+			$data = $this->data[$level];
+
+			if( count($data) == 0 )
+			{
+				unset($data); continue;
+			}
+			
+			foreach( $data as $rg )
+			{
+				if( $rg->getOwner() == $nick )
+				{
+					$arr[] = $rg;
+				}
 			}
 		}
-		
-		return $arr;
+
+		unset($data); return $arr;
 	}
 
 
@@ -525,7 +588,11 @@ class Manager extends PluginBase
 		
 		foreach( $this->region->getAll() as $name => $data )
 		{
-			$this->data[] = new Region($this, $name, $data);
+			/** @todo check data on load. */
+			$rg    = new Region($this, $name, $data);
+			$level = $rg->getLevelName();
+
+			$this->data[$level][] = $rg;
 		}
 	}
 

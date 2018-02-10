@@ -296,9 +296,9 @@ class BlockGuard extends Manager implements Listener
 				return FALSE;
 			}
 		}
-		
+
 		$region = $api->getRegion($block);
-		
+
 		if( !isset($region) )
 		{
 			if( $api->getValue('safe_mode', 'config') === TRUE )
