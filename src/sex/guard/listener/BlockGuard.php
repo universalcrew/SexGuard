@@ -158,12 +158,13 @@ class BlockGuard extends Manager implements Listener
 		$player = $event->getPlayer();
 		$block  = $event->getBlock();
 
-		if( $block->getId() == Block::CHEST )
+		if( $this->isFlagDenied($block, 'break', $player) )
 		{
-			$flag = 'chest';
+			$event->setCancelled();
+			return;
 		}
-		
-		if( $this->isFlagDenied($block, $flag ?? 'break', $player) )
+
+		if( $block->getId() == Block::CHEST and $this->isFlagDenied($block, 'chest', $player) )
 		{
 			$event->setCancelled();
 			return;
