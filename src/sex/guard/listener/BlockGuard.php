@@ -255,10 +255,9 @@ class BlockGuard extends Manager implements Listener
 	{
 		$pk = $event->getPacket();
 
-		if( !($pk instanceof \pocketmine\network\protocol\ItemFrameDropItemPacket)
-		and !($pk instanceof \pocketmine\network\mcpe\protocol\ItemFrameDropItemPacket) )
+		if( $pk->getName() != 'ItemFrameDropItemPacket' )
 		{
-			return; // laggy.
+			return;
 		}
 
 		$player = $event->getPlayer();
