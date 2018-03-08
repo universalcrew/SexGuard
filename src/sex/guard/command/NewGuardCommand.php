@@ -55,9 +55,11 @@ class NewGuardCommand extends Command
 	 *  \___/\___/|_||_||_|_||_||_|\__._|_| |_|\__._|
 	 *
 	 *
-	 * @param CommandSender $sender
-	 * @param string        $label
-	 * @param string[]      $args
+	 * @param  CommandSender $sender
+	 * @param  string        $label
+	 * @param  string[]      $args
+	 *
+	 * @return bool
 	 */
 	function execute( CommandSender $sender, string $label, array $args ): bool
 	{
@@ -84,7 +86,7 @@ class NewGuardCommand extends Command
 		$args = array_map('strtolower', $args);
 		$name = array_shift($args);
 		
-		if( !in_array($name, array_keys($this->argument)) )
+		if( !isset($this->argument[$name]) )
 		{
 			$sender->sendMessage($api->getValue('rg_help'));
 			return FALSE;

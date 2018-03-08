@@ -41,16 +41,14 @@ use pocketmine\Player;
 
 /**
  * @todo throw exceptions in production isn't a good practice.
+ *       add config autoupdater.
  */
 use Exception;
 
 
 /**
- * @todo change json to asynchronous sqlite for data saving.
- *       implement 'manager -> provider -> bridge' pattern.
+ * @todo implement 'manager -> provider' pattern.
  *       convert arrays to containers.
- *       ...
- *       go to bed.
  */
 class Manager extends PluginBase
 {
@@ -588,7 +586,9 @@ class Manager extends PluginBase
 		
 		foreach( $this->region->getAll() as $name => $data )
 		{
-			/** @todo check data on load. */
+			/**
+			 * @todo check data on load.
+			 */
 			$rg    = new Region($this, $name, $data);
 			$level = $rg->getLevelName();
 
@@ -649,7 +649,7 @@ class Manager extends PluginBase
 
 		finally
 		{
-			$this->getServer()->getCommandMap()->register('SexGuard', $command);
+			$this->getServer()->getCommandMap()->register($this->getName(), $command);
 		}
 	}
 

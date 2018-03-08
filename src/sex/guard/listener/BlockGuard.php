@@ -257,6 +257,9 @@ class BlockGuard extends Manager implements Listener
 
 		if( $pk->getName() != 'ItemFrameDropItemPacket' )
 		{
+			/**
+			 * @todo what about steadfast2?
+			 */
 			return;
 		}
 
