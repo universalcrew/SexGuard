@@ -52,7 +52,7 @@ use Exception;
  */
 class Manager extends PluginBase
 {
-	const CONFIGURATION_SIGN = '5856cd0ba5aac216328752e444c9565c';
+	const CONFIGURATION_SIGN = '9d3c44979d4e3d0d3f5fe14a268f5791';
 
 	const DEFAULT_FLAG = [
 		'interact' => TRUE,
@@ -62,6 +62,7 @@ class Manager extends PluginBase
 		'bucket'   => FALSE,
 		'damage'   => TRUE,
 		'chest'    => FALSE,
+		'frame'    => FALSE,
 		'place'    => FALSE,
 		'break'    => FALSE,
 		'sleep'    => FALSE,
@@ -539,7 +540,8 @@ class Manager extends PluginBase
 	}
 
 
-	/** _                 _
+	/**
+	 *  _                 _
 	 * | | ___   __ _  __| |
 	 * | |/ _ \ / _' |/ _' |
 	 * | | (_) | (_) | (_) |

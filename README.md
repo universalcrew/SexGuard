@@ -14,10 +14,7 @@ This plugin works only on PHP >= 7.0 and PocketMine-MP server software or any fo
 - [x] **SteadFast2**
 - [x] **GenisysPro**
 - [x] **Leveryl**
-- [x] **Turanic**
 - [x] **Tesseract**
-- [x] **BlueLight**
-- [x] **DarkSystem**
 
 ### Features:
 
@@ -37,7 +34,7 @@ Permission | Description | Default
 
 ### Need help?
 
-Telegram: https://t.me/joinchat/EbZB3BKGfsu0DdbDNmpPjg
+Telegram: https://t.me/joinchat/EbZB3BKGfstWw6UwYaBKHQ
 
 <a name="RUS"></a>
 
@@ -51,10 +48,7 @@ Telegram: https://t.me/joinchat/EbZB3BKGfsu0DdbDNmpPjg
 - [x] **SteadFast2**
 - [x] **GenisysPro**
 - [x] **Leveryl**
-- [x] **Turanic**
 - [x] **Tesseract**
-- [x] **BlueLight**
-- [x] **DarkSystem**
 
 ### Особенности:
 
@@ -74,4 +68,4 @@ Telegram: https://t.me/joinchat/EbZB3BKGfsu0DdbDNmpPjg
 
 ### Нужна помощь?
 
-Telegram: https://t.me/joinchat/EbZB3BKGfsu0DdbDNmpPjg
+Telegram: https://t.me/joinchat/EbZB3BKGfstWw6UwYaBKHQ

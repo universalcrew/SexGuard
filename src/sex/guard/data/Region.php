@@ -19,9 +19,6 @@ use pocketmine\level\Level;
 use pocketmine\Player;
 
 
-/**
- * @todo containers shouldn't extends nothing.
- */
 class Region extends Manager
 {
 	/**

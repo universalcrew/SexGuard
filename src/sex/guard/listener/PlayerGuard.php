@@ -284,6 +284,11 @@ class PlayerGuard extends Manager implements Listener
 		{
 			$flag = 'chest';
 		}
+
+		elseif( $block->getId() == Block::ITEM_FRAME_BLOCK )
+		{
+			$flag = 'frame';
+		}
 		
 		if( $this->isFlagDenied($player, $flag ?? 'interact', $block) )
 		{

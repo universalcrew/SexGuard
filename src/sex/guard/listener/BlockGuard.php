@@ -257,9 +257,6 @@ class BlockGuard extends Manager implements Listener
 
 		if( $pk->getName() != 'ItemFrameDropItemPacket' )
 		{
-			/**
-			 * @todo what about steadfast2?
-			 */
 			return;
 		}
 
@@ -271,9 +268,14 @@ class BlockGuard extends Manager implements Listener
 			return;
 		}
 
+		if( $tile->getLevel() === null )
+		{
+			return;
+		}
+
 		$block = $tile->getBlock();
 
-		if( $this->isFlagDenied($block, 'break', $player) )
+		if( $this->isFlagDenied($block, 'frame', $player) )
 		{
 			$event->setCancelled();
 			$tile->spawnTo($player);
