@@ -23,6 +23,9 @@ use sex\guard\listener\PlayerGuard;
 use sex\guard\command\OldGuardCommand;
 use sex\guard\command\NewGuardCommand;
 
+use sex\guard\event\region\RegionCreateEvent;
+use sex\guard\event\region\RegionRemoveEvent;
+
 use sex\guard\command\argument\PositionOneArgument;
 use sex\guard\command\argument\PositionTwoArgument;
 use sex\guard\command\argument\PositionArgument;
@@ -303,8 +306,18 @@ class Manager extends PluginBase
 			],
 			'flag'   => $this->getValue('allowed_flag', 'config')
 		];
+
+		$region = new Region($this, $name, $data);
+		$event  = new RegionCreateEvent($this, $region);
+
+		$this->getServer()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return;
+		}
 		
-		$this->data[$level][] = new Region($this, $name, $data);
+		$this->data[$level][] = $region;
 		
 		unset($this->position[0][$nick]);
 		unset($this->position[1][$nick]);
@@ -342,6 +355,15 @@ class Manager extends PluginBase
 				if( $rg->getRegionName() != $name )
 				{
 					continue;
+				}
+
+				$event = new RegionRemoveEvent($this, $rg);
+
+				$this->getServer()->getPluginManager()->callEvent($event);
+
+				if( $event->isCancelled() )
+				{
+					return FALSE;
 				}
 
 				unset($this->data[$level][$key]);

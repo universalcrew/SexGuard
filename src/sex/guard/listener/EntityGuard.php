@@ -13,6 +13,8 @@
  *
  */
 use sex\guard\Manager;
+use sex\guard\event\flag\IgnoredFlagCheckEvent;
+use sex\guard\event\flag\FlagCheckByEntityEvent;
 
 use pocketmine\Player;
 use pocketmine\entity\Entity;
@@ -204,6 +206,15 @@ class EntityGuard extends Manager implements Listener
 			{
 				if( !in_array($region->getRegionName(), $val['ignored_region']) )
 				{
+					$event = new IgnoredFlagCheckEvent($api, $region, $flag, $entity);
+
+					$api->getServer()->getPluginManager()->callEvent($event);
+
+					if( $event->isCancelled() )
+					{
+						return $event->isMainEventCancelled();
+					}
+
 					return FALSE;
 				}
 			}
@@ -211,6 +222,15 @@ class EntityGuard extends Manager implements Listener
 		
 		if( !$region->getFlagValue($flag) )
 		{
+			$event = new FlagCheckByEntityEvent($api, $region, $flag, $entity, $ignore);
+
+			$api->getServer()->getPluginManager()->callEvent($event);
+
+			if( $event->isCancelled() )
+			{
+				return $event->isMainEventCancelled();
+			}
+
 			if( ($entity instanceof Player) and !$ignore )
 			{
 				$api->sendWarning($entity, $api->getValue('warn_flag_'.$flag));

@@ -13,6 +13,9 @@
  *
  */
 use sex\guard\Manager;
+use sex\guard\event\flag\IgnoredFlagCheckEvent;
+use sex\guard\event\flag\FlagCheckByBlockEvent;
+use sex\guard\event\flag\FlagCheckByPlayerEvent;
 
 use pocketmine\Player;
 use pocketmine\block\Block;
@@ -324,6 +327,15 @@ class BlockGuard extends Manager implements Listener
 			return FALSE;
 		}
 
+		$event = new FlagCheckByBlockEvent($api, $region, $flag, $block, $player);
+
+		$api->getServer()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return $event->isMainEventCancelled();
+		}
+
 		if( isset($player) )
 		{
 			$val = $api->getGroupValue($player);
@@ -332,6 +344,15 @@ class BlockGuard extends Manager implements Listener
 			{
 				if( !in_array($region->getRegionName(), $val['ignored_region']) )
 				{
+					$event = new IgnoredFlagCheckEvent($api, $region, $flag, $player);
+
+					$api->getServer()->getPluginManager()->callEvent($event);
+
+					if( $event->isCancelled() )
+					{
+						return $event->isMainEventCancelled();
+					}
+
 					return FALSE;
 				}
 			}
@@ -353,6 +374,15 @@ class BlockGuard extends Manager implements Listener
 		{
 			if( !in_array($nick, $region->getMemberList()) )
 			{
+				$event = new FlagCheckByPlayerEvent($api, $region, $flag, $player, $block);
+
+				$api->getServer()->getPluginManager()->callEvent($event);
+
+				if( $event->isCancelled() )
+				{
+					return $event->isMainEventCancelled();
+				}
+
 				$pos    = $player->subtract($block);
 				$pos->y = abs($pos->y + 2);
 				$pos    = $pos->divide(4);

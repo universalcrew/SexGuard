@@ -14,9 +14,15 @@
  */
 use sex\guard\Manager;
 
+use sex\guard\event\region\RegionSaveEvent;
+use sex\guard\event\region\RegionFlagChangeEvent;
+use sex\guard\event\region\RegionOwnerChangeEvent;
+use sex\guard\event\region\RegionMemberChangeEvent;
+
 use pocketmine\math\Vector3;
 use pocketmine\level\Level;
 use pocketmine\Player;
+use pocketmine\Server;
 
 
 class Region extends Manager
@@ -66,6 +72,15 @@ class Region extends Manager
 	 */
 	function addMember( string $nick )
 	{
+		$event = new RegionMemberChangeEvent($this->api, $this, $nick, RegionMemberChangeEvent::TYPE_ADD);
+
+		Server::getInstance()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+
 		$this->property['member'][] = strtolower($nick);
 		
 		$this->save();
@@ -77,6 +92,15 @@ class Region extends Manager
 	 */
 	function removeMember( string $nick )
 	{
+		$event = new RegionMemberChangeEvent($this->api, $this, $nick, RegionMemberChangeEvent::TYPE_REMOVE);
+
+		Server::getInstance()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+
 		$key = array_search(strtolower($nick), $this->property['member']);
 		
 		unset($this->property['member'][$key]);
@@ -89,6 +113,15 @@ class Region extends Manager
 	 */
 	function setOwner( string $nick )
 	{
+		$event = new RegionOwnerChangeEvent($this->api, $this, $this->property['owner'], $nick);
+
+		Server::getInstance()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+
 		$this->property['owner'] = strtolower($nick);
 		
 		$this->save();
@@ -101,6 +134,15 @@ class Region extends Manager
 	 */
 	function setFlag( string $flag, bool $value )
 	{
+		$event = new RegionFlagChangeEvent($this->api, $this, $flag, $value);
+
+		Server::getInstance()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+
 		$flag = strtolower($flag);
 		
 		if( isset($this->property['flag'][$flag]) )
@@ -197,6 +239,15 @@ class Region extends Manager
 	 */
 	private function save( )
 	{
+		$event = new RegionSaveEvent($this->api, $this);
+
+		Server::getInstance()->getPluginManager()->callEvent($event);
+
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+
 		$this->api->saveData($this->name, $this->property);
 	}
 }

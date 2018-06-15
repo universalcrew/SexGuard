@@ -13,6 +13,8 @@
  *
  */
 use sex\guard\Manager;
+use sex\guard\event\flag\IgnoredFlagCheckEvent;
+use sex\guard\event\flag\FlagCheckByPlayerEvent;
 
 use pocketmine\Player;
 use pocketmine\item\Item;
@@ -424,6 +426,15 @@ class PlayerGuard extends Manager implements Listener
 		{
 			if( !in_array($region->getRegionName(), $val['ignored_region']) )
 			{
+				$event = new IgnoredFlagCheckEvent($api, $region, $flag, $player);
+
+				$api->getServer()->getPluginManager()->callEvent($event);
+
+				if( $event->isCancelled() )
+				{
+					return $event->isMainEventCancelled();
+				}
+
 				return FALSE;
 			}
 		}
@@ -439,6 +450,15 @@ class PlayerGuard extends Manager implements Listener
 		{
 			if( !in_array($nick, $region->getMemberList()) )
 			{
+				$event = new FlagCheckByPlayerEvent($api, $region, $flag, $player, $block);
+
+				$api->getServer()->getPluginManager()->callEvent($event);
+
+				if( $event->isCancelled() )
+				{
+					return $event->isMainEventCancelled();
+				}
+
 				$api->sendWarning($player, $api->getValue('warn_flag_'.$flag));
 				return TRUE;
 			}
