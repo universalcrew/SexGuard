@@ -54,8 +54,6 @@ class RegionOwnerChangeEvent extends RegionEvent implements Cancellable
 
 		$this->old_owner = strtolower($old);
 		$this->new_owner = strtolower($new);
-
-		echo "RegionOwnerChangeEvent". PHP_EOL;
 	}
 
 

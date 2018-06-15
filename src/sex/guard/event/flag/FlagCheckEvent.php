@@ -14,6 +14,7 @@
  */
 use sex\guard\Manager;
 use sex\guard\data\Region;
+use sex\guard\event\RegionEvent;
 
 use pocketmine\event\plugin\PluginEvent;
 

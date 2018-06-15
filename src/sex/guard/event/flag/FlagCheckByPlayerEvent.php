@@ -57,8 +57,6 @@ class FlagCheckByPlayerEvent extends FlagCheckEvent implements Cancellable
 
 		$this->player = $player;
 		$this->block  = $block;
-
-		echo "FlagCheckByPlayerEvent". PHP_EOL;
 	}
 
 

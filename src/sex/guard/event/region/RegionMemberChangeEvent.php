@@ -58,8 +58,6 @@ class RegionMemberChangeEvent extends RegionEvent implements Cancellable
 
 		$this->member = strtolower($member);
 		$this->type   = $type == self::TYPE_ADD ? self::TYPE_ADD : self::TYPE_REMOVE;
-
-		echo "RegionMemberChangeEvent:$type". PHP_EOL;
 	}
 
 

@@ -56,8 +56,6 @@ class FlagCheckByEntityEvent extends FlagCheckEvent implements Cancellable
 
 		$this->entity  = $entity;
 		$this->ignored = $ignore;
-
-		echo "FlagCheckByEntityEvent". PHP_EOL;
 	}
 
 

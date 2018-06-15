@@ -49,8 +49,6 @@ class IgnoredFlagCheckEvent extends FlagCheckEvent implements Cancellable
 		parent::__construct($main, $region, $flag);
 
 		$this->player = $player;
-
-		echo "IgnoredFlagCheckEvent". PHP_EOL;
 	}
 
 

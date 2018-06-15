@@ -59,8 +59,6 @@ class RegionFlagChangeEvent extends RegionEvent implements Cancellable
 
 		$this->flag      = strtolower($flag);
 		$this->new_value = $value;
-
-		echo "RegionFlagChangeEvent". PHP_EOL;
 	}
 
 

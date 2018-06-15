@@ -38,7 +38,5 @@ class RegionCreateEvent extends RegionEvent implements Cancellable
 	function __construct( Manager $main, Region $region )
 	{
 		parent::__construct($main, $region);
-
-		echo "RegionCreateEvent". PHP_EOL;
 	}
 }
