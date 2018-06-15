@@ -383,11 +383,15 @@ class BlockGuard extends Manager implements Listener
 					return $event->isMainEventCancelled();
 				}
 
-				$pos    = $player->subtract($block);
-				$pos->y = abs($pos->y + 2);
-				$pos    = $pos->divide(4);
+				if( $flag == 'break' )
+				{
+					$pos    = $player->subtract($block);
+					$pos->y = abs($pos->y + 2);
+					$pos    = $pos->divide(8);
 
-				$player->setMotion($pos);
+					$player->setMotion($pos);
+				}
+
 				$api->sendWarning($player, $api->getValue('warn_flag_'.$flag));
 				return TRUE;
 			}
