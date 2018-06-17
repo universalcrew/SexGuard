@@ -323,7 +323,7 @@ class Manager extends PluginBase
 			'flag'   => $this->getValue('allowed_flag', 'config')
 		];
 
-		$region = new Region($this, $name, $data);
+		$region = new Region($name, $data);
 		$event  = new RegionCreateEvent($this, $region);
 
 		$this->getServer()->getPluginManager()->callEvent($event);
@@ -337,7 +337,7 @@ class Manager extends PluginBase
 		
 		unset($this->position[0][$nick]);
 		unset($this->position[1][$nick]);
-		$this->saveData($name, $data);
+		$this->saveRegion($region);
 	}
 
 
@@ -490,15 +490,11 @@ class Manager extends PluginBase
 
 
 	/**
-	 * @todo  saveData(string, array) should be saveRegion(string, Region).
-	 *        async all saves.
-	 *
-	 * @param string  $name
-	 * @param mixed[] $data
+	 * @param Region $region
 	 */
-	protected function saveData( string $name, array $data )
+	function saveRegion( Region $region )
 	{
-		$this->region->set($name, $data);
+		$this->region->set($region->getRegionName(), $region->toData());
 		$this->region->save(TRUE);
 	}
 
@@ -650,7 +646,7 @@ class Manager extends PluginBase
 			/**
 			 * @todo check data on load.
 			 */
-			$rg    = new Region($this, $name, $data);
+			$rg    = new Region($name, $data);
 			$level = $rg->getLevelName();
 
 			$this->data[$level][] = $rg;

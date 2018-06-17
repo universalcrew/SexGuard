@@ -19,19 +19,12 @@ use sex\guard\event\region\RegionFlagChangeEvent;
 use sex\guard\event\region\RegionOwnerChangeEvent;
 use sex\guard\event\region\RegionMemberChangeEvent;
 
-use pocketmine\math\Vector3;
 use pocketmine\level\Level;
-use pocketmine\Player;
 use pocketmine\Server;
 
 
-class Region extends Manager
+class Region
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
 	/**
 	 * @var string
 	 */
@@ -48,13 +41,11 @@ class Region extends Manager
 	/**
 	 * @todo  construct without array.
 	 *
-	 * @param Manager $api
 	 * @param string  $name
 	 * @param mixed[] $data
 	 */
-	function __construct( Manager $api, string $name, array $data )
+	function __construct( string $name, array $data )
 	{
-		$this->api      = $api;
 		$this->name     = $name;
 		$this->property = $data;
 	}
@@ -72,7 +63,7 @@ class Region extends Manager
 	 */
 	function addMember( string $nick )
 	{
-		$event = new RegionMemberChangeEvent($this->api, $this, $nick, RegionMemberChangeEvent::TYPE_ADD);
+		$event = new RegionMemberChangeEvent(Manager::getInstance(), $this, $nick, RegionMemberChangeEvent::TYPE_ADD);
 
 		Server::getInstance()->getPluginManager()->callEvent($event);
 
@@ -92,7 +83,7 @@ class Region extends Manager
 	 */
 	function removeMember( string $nick )
 	{
-		$event = new RegionMemberChangeEvent($this->api, $this, $nick, RegionMemberChangeEvent::TYPE_REMOVE);
+		$event = new RegionMemberChangeEvent(Manager::getInstance(), $this, $nick, RegionMemberChangeEvent::TYPE_REMOVE);
 
 		Server::getInstance()->getPluginManager()->callEvent($event);
 
@@ -113,7 +104,7 @@ class Region extends Manager
 	 */
 	function setOwner( string $nick )
 	{
-		$event = new RegionOwnerChangeEvent($this->api, $this, $this->property['owner'], $nick);
+		$event = new RegionOwnerChangeEvent(Manager::getInstance(), $this, $this->property['owner'], $nick);
 
 		Server::getInstance()->getPluginManager()->callEvent($event);
 
@@ -134,7 +125,7 @@ class Region extends Manager
 	 */
 	function setFlag( string $flag, bool $value )
 	{
-		$event = new RegionFlagChangeEvent($this->api, $this, $flag, $value);
+		$event = new RegionFlagChangeEvent(Manager::getInstance(), $this, $flag, $value);
 
 		Server::getInstance()->getPluginManager()->callEvent($event);
 
@@ -208,7 +199,7 @@ class Region extends Manager
 	 */
 	function getLevel( )
 	{
-		return $this->api->getServer()->getLevelByName($this->property['level']);
+		return Server::getInstance()->getLevelByName($this->property['level']);
 	}
 
 
@@ -239,7 +230,7 @@ class Region extends Manager
 	 */
 	private function save( )
 	{
-		$event = new RegionSaveEvent($this->api, $this);
+		$event = new RegionSaveEvent(Manager::getInstance(), $this);
 
 		Server::getInstance()->getPluginManager()->callEvent($event);
 
@@ -248,6 +239,15 @@ class Region extends Manager
 			return;
 		}
 
-		$this->api->saveData($this->name, $this->property);
+		Manager::getInstance()->saveRegion($this);
+	}
+
+
+	/**
+	 * @return mixed[]
+	 */
+	function toData( ): array
+	{
+		return $this->property;
 	}
 }
