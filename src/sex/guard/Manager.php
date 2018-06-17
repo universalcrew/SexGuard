@@ -78,6 +78,21 @@ class Manager extends PluginBase
 
 
 	/**
+	 * @var Manager
+	 */
+	private static $instance = null;
+
+
+	/**
+	 * @return Manager
+	 */
+	static function getInstance( ): Manager
+	{
+		return self::$instance;
+	}
+
+
+	/**
 	 * @var Config
 	 */
 	private $message, $region, $config, $group;
@@ -107,6 +122,7 @@ class Manager extends PluginBase
 
 	function onEnable( )
 	{
+		$this->loadInstance();
 		$this->initPermission();
 		$this->initProvider();
 
@@ -585,6 +601,12 @@ class Manager extends PluginBase
 	 * |_|\___/ \__,_|\__,_|
 	 *
 	 */
+	private function loadInstance( )
+	{
+		self::$instance = $this;
+	}
+
+
 	private function initPermission( )
 	{
 		$list = [
