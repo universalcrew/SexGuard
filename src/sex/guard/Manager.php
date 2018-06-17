@@ -383,10 +383,11 @@ class Manager extends PluginBase
 
 	/**
 	 * @param  string $nick
+	 * @param  bool   $include_member
 	 *
 	 * @return Region[]
 	 */
-	function getRegionList( string $nick ): array
+	function getRegionList( string $nick, bool $include_member = false ): array
 	{
 		$nick = strtolower($nick);
 		$arr  = [];
@@ -412,7 +413,21 @@ class Manager extends PluginBase
 				if( $rg->getOwner() == $nick )
 				{
 					$arr[] = $rg;
+
+					continue;
 				}
+
+				if( !$include_member )
+				{
+					continue;
+				}
+
+				if( !in_array($nick, $rg->getMemberList()) )
+				{
+					continue;
+				}
+
+				$arr[] = $rg;
 			}
 		}
 
