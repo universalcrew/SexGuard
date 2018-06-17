@@ -20,7 +20,7 @@ use pocketmine\event\Cancellable;
 use pocketmine\Player;
 
 
-class IgnoredFlagCheckEvent extends FlagCheckEvent implements Cancellable
+class FlagIgnoreEvent extends FlagCheckEvent implements Cancellable
 {
 	static $handlerList = null;
 
