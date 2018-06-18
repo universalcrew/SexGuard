@@ -14,6 +14,7 @@
  */
 use sex\guard\Manager;
 
+use sex\guard\event\region\RegionLoadEvent;
 use sex\guard\event\region\RegionSaveEvent;
 use sex\guard\event\region\RegionFlagChangeEvent;
 use sex\guard\event\region\RegionOwnerChangeEvent;
@@ -48,6 +49,10 @@ class Region
 	{
 		$this->name     = $name;
 		$this->property = $data;
+
+		$event = new RegionLoadEvent(Manager::getInstance(), $this);
+
+		Server::getInstance()->getPluginManager()->callEvent($event);
 	}
 
 
