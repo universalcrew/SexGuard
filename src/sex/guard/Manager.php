@@ -120,9 +120,14 @@ class Manager extends PluginBase
 	protected $sign;
 
 
-	function onEnable( )
+	function onLoad( )
 	{
 		$this->loadInstance();
+	}
+
+
+	function onEnable( )
+	{
 		$this->initPermission();
 		$this->initProvider();
 
