@@ -77,7 +77,14 @@ class Region
 			return;
 		}
 
-		$this->property['member'][] = strtolower($nick);
+		$nick = strtolower($nick);
+
+		if( in_array($nick, $this->property['member']) )
+		{
+			return;
+		}
+
+		$this->property['member'][] = $nick;
 		
 		$this->save();
 	}

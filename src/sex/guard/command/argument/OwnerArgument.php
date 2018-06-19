@@ -55,7 +55,7 @@ class OwnerArgument extends Manager
 	{
 		$nick = strtolower($sender->getName());
 		$api  = $this->api;
-		
+
 		if( count($args) < 1 )
 		{
 			$sender->sendMessage($api->getValue('owner_help'));
@@ -69,19 +69,19 @@ class OwnerArgument extends Manager
 			$sender->sendMessage($api->getValue('rg_not_exist'));
 			return FALSE;
 		}
-		
+
 		if( !isset($region) )
 		{
 			$sender->sendMessage($api->getValue('rg_not_exist'));
 			return FALSE;
 		}
-		
+
 		if( $region->getOwner() != $nick and !$sender->hasPermission('sexguard.all') )
 		{
 			$sender->sendMessage($api->getValue('player_not_owner'));
 			return FALSE;
 		}
-		
+
 		$owner = $args[1];
 
 		if( !isset($owner) )
@@ -105,9 +105,12 @@ class OwnerArgument extends Manager
 			$sender->sendMessage(str_replace('{max_count}', $val['max_count'], $api->getValue('rg_overcount')));
 			return FALSE;
 		}
-		
+
 		$region->setOwner($owner);
-		$sender->sendMessage(str_replace('{player}', $owner, $api->getValue('owner_change')));
+		$region->addMember($nick);
+
+		$sender->sendMessage(str_replace(['{player}', '{region}'], [$owner, $args[0]], $api->getValue('owner_change')));
+		$player->sendMessage(str_replace(['{player}', '{region}'], [$nick,  $args[0]], $api->getValue('owner_got_region')));
 		return TRUE;
 	}
 }

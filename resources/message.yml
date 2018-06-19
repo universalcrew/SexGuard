@@ -109,10 +109,14 @@ player_already_member: "§l§c- §fGUARD §c- Игрок уже участник
 ###
 #   owner_help: помощь по команде
 #   owner_change: владелец региона изменен
+#   owner_got_region: игрок получил регион
 owner_help: "§l§o§e--------- §fH E L P §e---------§r\n§l§e• §f/rg owner <регион> <игрок> §7- §fназначить владельца§r\n§l§e• §fВ целях безопасности количество владельцев§r\n§l§e• §fНа регион не может превышать 1 игрока§r\n§l§e• §fПри выборе нового владельца вы станете участником§r\n§l§o§e__________________________§r"
 #
+# {region} - регион
 # {player} - новый владелец региона
-owner_change: "§l§a- §fGUARD §a- {player} теперь владеет регионом§r"
+owner_change: "§l§a- §fGUARD §a- {player} теперь владеет регионом {region}§r"
+# {player} - старый владелец региона
+owner_got_region: "§l§a- §fGUARD §a- {player} передал вам регион {region}§r"
 ###
 # 6. /rg pos [1,2]
 ###

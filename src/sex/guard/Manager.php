@@ -466,30 +466,50 @@ class Manager extends PluginBase
 	 */
 	function getValue( string $key, string $type = 'message' )
 	{
-		$type = strtolower($type);
-		$key  = mb_strtolower($key);
-		
+		$type  = strtolower($type);
+		$key   = mb_strtolower($key);
+		$error = "Configuration error: пункт '$key' не найден в $type.yml. Пожалуйста, удалите старый конфиг (/plugins/sexGuard/$type.yml) и перезагрузите сервер.";
+
 		if( $type == 'config' )
 		{
 			$value = $this->config->get($key, 'жопа');
+
+			if( $value === 'жопа' )
+			{
+				throw new Exception($error);
+			}
 		}
-		
+
 		elseif( $type == 'group' )
 		{
-			$value = $this->group->get($key, 'жопа');
-			$value = $value === 'жопа' ? $this->group->get('default') : $value;
+			$value = $this->group->get($key);
+			$value = !$value ? $this->group->get('default') : $value;
+
+			if( !$value )
+			{
+				$this->getLogger()->error($error);
+
+				$value = [
+					'max_size'       => 5000,
+					'max_count'      => 4,
+					'ignored_flag'   => [],
+					'ignored_region' => []
+				];
+			}
 		}
-		
+
 		else
 		{
-			$value = $this->message->get($key, 'жопа');
+			$value = $this->message->get($key);
+
+			if( !$value )
+			{
+				$this->getLogger()->error($error);
+
+				$value = "§l§c- §fGUARD §c- Произошла внутренняя ошибка§r";
+			}
 		}
-		
-		if( $value === 'жопа' )
-		{
-			throw new Exception("Configuration error: пункт '$key' не найден в $type.yml. Пожалуйста, удалите старый конфиг (/plugins/sexGuard/$type.yml) и перезагрузите сервер.");
-		}
-		
+
 		return $value;
 	}
 
