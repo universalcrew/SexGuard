@@ -502,7 +502,7 @@ class Manager extends PluginBase
 		{
 			$value = $this->message->get($key);
 
-			if( !$value )
+			if( $value === FALSE )
 			{
 				$this->getLogger()->error($error);
 
