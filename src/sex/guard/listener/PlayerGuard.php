@@ -13,7 +13,7 @@
  *
  */
 use sex\guard\Manager;
-use sex\guard\event\flag\IgnoredFlagCheckEvent;
+use sex\guard\event\flag\FlagIgnoreEvent;
 use sex\guard\event\flag\FlagCheckByPlayerEvent;
 
 use pocketmine\Player;
@@ -426,7 +426,7 @@ class PlayerGuard extends Manager implements Listener
 		{
 			if( !in_array($region->getRegionName(), $val['ignored_region']) )
 			{
-				$event = new IgnoredFlagCheckEvent($api, $region, $flag, $player);
+				$event = new FlagIgnoreEvent($api, $region, $flag, $player);
 
 				$api->getServer()->getPluginManager()->callEvent($event);
 

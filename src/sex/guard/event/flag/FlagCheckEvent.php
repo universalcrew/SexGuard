@@ -66,7 +66,7 @@ class FlagCheckEvent extends RegionEvent
 	 */
 	function isMainEventCancelled( )
 	{
-		return $need_cancel;
+		return $this->need_cancel;
 	}
 
 
@@ -75,6 +75,6 @@ class FlagCheckEvent extends RegionEvent
 	 */
 	function setMainEventCancelled( bool $value = TRUE )
 	{
-		$need_cancel = $value;
+		$this->need_cancel = $value;
 	}
 }

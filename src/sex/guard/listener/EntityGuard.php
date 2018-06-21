@@ -13,7 +13,7 @@
  *
  */
 use sex\guard\Manager;
-use sex\guard\event\flag\IgnoredFlagCheckEvent;
+use sex\guard\event\flag\FlagIgnoreEvent;
 use sex\guard\event\flag\FlagCheckByEntityEvent;
 
 use pocketmine\Player;
@@ -206,7 +206,7 @@ class EntityGuard extends Manager implements Listener
 			{
 				if( !in_array($region->getRegionName(), $val['ignored_region']) )
 				{
-					$event = new IgnoredFlagCheckEvent($api, $region, $flag, $entity);
+					$event = new FlagIgnoreEvent($api, $region, $flag, $entity);
 
 					$api->getServer()->getPluginManager()->callEvent($event);
 
