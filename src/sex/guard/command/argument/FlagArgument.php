@@ -20,7 +20,7 @@ use pocketmine\Player;
 /**
  * @todo nothing.
  */
-class FlagArgument extends Manager
+class FlagArgument
 {
 	/**
 	 * @var Manager

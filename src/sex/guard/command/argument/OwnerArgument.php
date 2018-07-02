@@ -21,7 +21,7 @@ use pocketmine\level\Position;
 /**
  * @todo nothing.
  */
-class OwnerArgument extends Manager
+class OwnerArgument
 {
 	/**
 	 * @var Manager

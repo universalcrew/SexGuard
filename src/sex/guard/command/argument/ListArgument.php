@@ -21,7 +21,7 @@ use pocketmine\item\Item;
 /**
  * @todo nothing.
  */
-class ListArgument extends Manager
+class ListArgument
 {
 	/**
 	 * @var Manager

@@ -20,7 +20,7 @@ use pocketmine\Player;
 /**
  * @todo nothing.
  */
-class RemoveArgument extends Manager
+class RemoveArgument
 {
 	/**
 	 * @var Manager

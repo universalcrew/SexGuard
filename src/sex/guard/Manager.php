@@ -102,22 +102,22 @@ class Manager extends PluginBase
 	 *
 	 * @var Region[][]
 	 */
-	protected $data = [];
+	private $data = [];
 
 	/**
 	 * @var Position[]
 	 */
-	protected $position = [];
+	public $position = [];
 
 	/**
 	 * @var PluginBase[]
 	 */
-	protected $extension = [];
+	public $extension = [];
 
 	/**
 	 * @var Config
 	 */
-	protected $sign;
+	public $sign;
 
 
 	function onLoad( )
@@ -530,7 +530,7 @@ class Manager extends PluginBase
 	 *
 	 * @return int
 	 */
-	protected function calculateSize( Position $pos1, Position $pos2 ): int
+	function calculateSize( Position $pos1, Position $pos2 ): int
 	{
 		$x = [ min($pos1->getX(), $pos2->getX()), max($pos1->getX(), $pos2->getX()) ];
 		$y = [ min($pos1->getY(), $pos2->getY()), max($pos1->getY(), $pos2->getY()) ];
@@ -548,7 +548,7 @@ class Manager extends PluginBase
 	/**
 	 * @return string[]
 	 */
-	protected function getAllowedFlag( ): array
+	function getAllowedFlag( ): array
 	{
 		$flag = array_map('strtolower', array_keys($this->getValue('allowed_flag', 'config')));
 
@@ -570,7 +570,7 @@ class Manager extends PluginBase
 	 * @param Player $player
 	 * @param string $message
 	 */
-	protected function sendWarning( Player $player, string $message )
+	function sendWarning( Player $player, string $message )
 	{
 		if( empty($message) )
 		{
@@ -593,7 +593,7 @@ class Manager extends PluginBase
 	 *
 	 * @return int[]
 	 */
-	protected function getGroupValue( Player $player ): array
+	function getGroupValue( Player $player ): array
 	{
 		$val = $this->getValue('default', 'group');
 		

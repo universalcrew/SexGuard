@@ -18,7 +18,7 @@ use pocketmine\Player;
 use pocketmine\item\Item;
 
 
-class WandArgument extends Manager
+class WandArgument
 {
 	/**
 	 * @var Manager

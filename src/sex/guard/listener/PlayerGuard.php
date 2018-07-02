@@ -35,7 +35,7 @@ use pocketmine\event\player\PlayerBucketEmptyEvent;
 /**
  * @todo good listener should listen only one event.
  */
-class PlayerGuard extends Manager implements Listener
+class PlayerGuard implements Listener
 {
 	/**
 	 * @var Manager

@@ -31,7 +31,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
  * @todo good listener should listen only one event.
  *       rewrite explode listener for more safety.
  */
-class EntityGuard extends Manager implements Listener
+class EntityGuard implements Listener
 {
 	/**
 	 * @var Manager

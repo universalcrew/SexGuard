@@ -33,7 +33,7 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 /**
  * @todo good listener should listen only one event.
  */
-class BlockGuard extends Manager implements Listener
+class BlockGuard implements Listener
 {
 	/**
 	 * @var Manager
