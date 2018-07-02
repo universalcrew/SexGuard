@@ -282,33 +282,44 @@ class PlayerGuard extends Manager implements Listener
 			}
 		}
 
+		$flag = 'interact';
+
 		if( $block->getId() == Block::CHEST )
 		{
 			$flag = 'chest';
 		}
 
-		elseif( $block->getId() == Block::ITEM_FRAME_BLOCK )
+		if( $block->getId() == Block::ITEM_FRAME_BLOCK )
 		{
 			$flag = 'frame';
 		}
 
-		elseif( $block->getId() == Block::GRASS )
+		if( $block->getId() == Block::GRASS )
 		{
 			$list = [
 				Item::WOODEN_SHOVEL,
 				Item::STONE_SHOVEL,
 				Item::IRON_SHOVEL,
 				Item::GOLD_SHOVEL,
-				Item::DIAMOND_SHOVEL
+				Item::DIAMOND_SHOVEL,
+
+				Item::WOODEN_HOE,
+				Item::STONE_HOE,
+				Item::IRON_HOE,
+				Item::GOLD_HOE,
+				Item::DIAMOND_HOE
 			];
 
 			if( in_array($item->getId(), $list) )
 			{
+				/**
+				 * @todo break?
+				 */
 				$flag = 'break';
 			}
 		}
 		
-		if( $this->isFlagDenied($player, $flag ?? 'interact', $block) )
+		if( $this->isFlagDenied($player, $flag, $block) )
 		{
 			$event->setCancelled();
 		}
