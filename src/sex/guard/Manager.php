@@ -14,8 +14,6 @@
  */
 use sex\guard\data\Region;
 
-use sex\guard\util\Config;
-
 use sex\guard\listener\BlockGuard;
 use sex\guard\listener\EntityGuard;
 use sex\guard\listener\PlayerGuard;
@@ -40,6 +38,7 @@ use sex\guard\command\argument\FlagArgument;
 use pocketmine\permission\Permission;
 use pocketmine\plugin\PluginBase;
 use pocketmine\level\Position;
+use pocketmine\utils\Config;
 use pocketmine\Player;
 
 /**

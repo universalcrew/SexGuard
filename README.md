@@ -10,8 +10,7 @@ This plugin works only on PHP >= 7.0 and PocketMine-MP server software or any fo
 
 ### Tested on:
 
-- [x] **PocketMine-MP (API 2.0.0 - 3.0.0-ALPHA11)**
-- [x] **SteadFast2**
+- [x] **PocketMine-MP (API 2.0.0 - 3.0.0-ALPHA12)**
 - [x] **GenisysPro**
 - [x] **Leveryl**
 - [x] **Tesseract**
@@ -44,8 +43,7 @@ Telegram: https://t.me/joinchat/EbZB3BKGfstWw6UwYaBKHQ
 
 ### Протестировано на:
 
-- [x] **PocketMine-MP (API 2.0.0 - 3.0.0-ALPHA11)**
-- [x] **SteadFast2**
+- [x] **PocketMine-MP (API 2.0.0 - 3.0.0-ALPHA12)**
 - [x] **GenisysPro**
 - [x] **Leveryl**
 - [x] **Tesseract**
