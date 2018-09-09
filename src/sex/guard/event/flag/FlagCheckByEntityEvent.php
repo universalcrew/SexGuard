@@ -31,9 +31,9 @@ class FlagCheckByEntityEvent extends FlagCheckEvent implements Cancellable
 	private $entity;
 
 	/**
-	 * @var bool
+	 * @var Entity
 	 */
-	private $ignored;
+	private $target;
 
 
 	/**
@@ -48,14 +48,14 @@ class FlagCheckByEntityEvent extends FlagCheckEvent implements Cancellable
 	 * @param Region  $region
 	 * @param string  $flag
 	 * @param Entity  $entity
-	 * @param bool    $ignore
+	 * @param Entity  $target
 	 */
-	function __construct( Manager $main, Region $region, string $flag, Entity $entity, bool $ignore = FALSE )
+	function __construct( Manager $main, Region $region, string $flag, Entity $entity, Entity $target = NULL )
 	{
 		parent::__construct($main, $region, $flag);
 
-		$this->entity  = $entity;
-		$this->ignored = $ignore;
+		$this->entity = $entity;
+		$this->target = $target;
 	}
 
 
@@ -69,10 +69,10 @@ class FlagCheckByEntityEvent extends FlagCheckEvent implements Cancellable
 
 
 	/**
-	 * @return bool
+	 * @return Entity
 	 */
-	function isIgnored( )
+	function getTarget( )
 	{
-		return $this->ignored;
+		return $this->target;
 	}
 }

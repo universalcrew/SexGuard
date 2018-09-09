@@ -76,25 +76,17 @@ class EntityGuard implements Listener
 		{
 			$damager = $event->getDamager();
 
-			if( $entity instanceof Player )
+			if( $entity instanceof Player and $damager instanceof Player )
 			{
-				if( $this->isFlagDenied($damager, 'pvp') )
+				if( $this->isFlagDenied($damager, 'pvp', $entity) )
 				{
 					$event->setCancelled();
 				}
-				
-				if( $this->isFlagDenied($entity, 'pvp', true) )
-				{
-					$event->setCancelled();
-				}
+
+				return;
 			}
 
-			if( $this->isFlagDenied($damager, 'mob') )
-			{
-				$event->setCancelled();
-			}
-			
-			if( $this->isFlagDenied($entity, 'mob') )
+			if( $this->isFlagDenied($damager, 'mob', $entity) )
 			{
 				$event->setCancelled();
 			}
@@ -184,21 +176,33 @@ class EntityGuard implements Listener
 	/**
 	 * @param  Entity $entity
 	 * @param  string $flag
-	 * @param  bool   $ignore
+	 * @param  Entity $target
 	 *
 	 * @return bool
 	 */
-	private function isFlagDenied( Entity $entity, string $flag, bool $ignore = FALSE ): bool
+	private function isFlagDenied( Entity $entity, string $flag, Entity $target = NULL ): bool
 	{
 		$api    = $this->api;
-		$region = $api->getRegion($entity);
-		
-		if( !isset($region) )
+		$result = FALSE;
+
+		if( isset($target) )
 		{
-			return FALSE;
+			$region = $api->getRegion($target);
+			
+			if( isset($region) and !$region->getFlagValue($flag) )
+			{
+				$result = TRUE;
+			}
 		}
 
-		if( ($entity instanceof Player) and !$ignore )
+		$region = $api->getRegion($entity);
+
+		if( !isset($region) )
+		{
+			return $result;
+		}
+
+		if( ($entity instanceof Player) )
 		{
 			$val = $api->getGroupValue($entity);
 			
@@ -222,7 +226,7 @@ class EntityGuard implements Listener
 		
 		if( !$region->getFlagValue($flag) )
 		{
-			$event = new FlagCheckByEntityEvent($api, $region, $flag, $entity, $ignore);
+			$event = new FlagCheckByEntityEvent($api, $region, $flag, $entity, $target);
 
 			$api->getServer()->getPluginManager()->callEvent($event);
 
@@ -231,14 +235,14 @@ class EntityGuard implements Listener
 				return $event->isMainEventCancelled();
 			}
 
-			if( ($entity instanceof Player) and !$ignore )
+			if( ($entity instanceof Player) )
 			{
 				$api->sendWarning($entity, $api->getValue('warn_flag_'.$flag));
 			}
 			
 			return TRUE;
 		}
-		
-		return FALSE;
+
+		return $result;
 	}
 }
