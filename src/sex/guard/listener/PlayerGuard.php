@@ -164,8 +164,6 @@ class PlayerGuard implements Listener
 						return;
 					}
 					
-					$price = intval($data['price']);
-					
 					if( $nick == $region->getOwner() )
 					{
 						$api->sendWarning($player, $api->getValue('player_already_owner'));
@@ -179,22 +177,26 @@ class PlayerGuard implements Listener
 						$api->sendWarning($player, str_replace('{max_count}', $val['max_count'], $api->getValue('rg_overcount')));
 						return;
 					}
-					
-					if( $money >= $price )
-					{
-						$economy->reduceMoney($nick, $price);
-						$economy->addMoney($region->getOwner(), $price);
-						$region->setOwner($nick);
-						$api->sign->remove($name);
-						$block->getLevel()->setBlock($pos, Block::get(Block::AIR));
-						
-						$api->sendWarning($player, str_replace('{region}', $region->getRegionName(), $api->getValue('player_buy_rg')));
-					}
 
-					else {
-						
+					$price = intval($data['price']);
+
+					if( $money < $price )
+					{
 						$api->sendWarning($player, str_replace('{price}', $price, $api->getValue('player_have_not_money')));
+						return;
 					}
+					
+					$economy->reduceMoney($nick, $price);
+					$economy->addMoney($region->getOwner(), $price);
+
+					$region->setOwner($nick);
+					$block->getLevel()->setBlock($pos, Block::get(Block::AIR));
+
+					$api->sign->remove($name);
+					$api->sign->save(TRUE);
+					
+					$api->sendWarning($player, str_replace('{region}', $region->getRegionName(), $api->getValue('player_buy_rg')));
+					break;
 				}
 			}
 			
