@@ -56,7 +56,7 @@ class OwnerArgument
 		$nick = strtolower($sender->getName());
 		$api  = $this->api;
 
-		if( count($args) < 1 )
+		if( count($args) < 2 )
 		{
 			$sender->sendMessage($api->getValue('owner_help'));
 			return FALSE;
