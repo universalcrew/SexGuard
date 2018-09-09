@@ -604,9 +604,10 @@ class Manager extends PluginBase
 
 		if( isset($this->extension['universalgroup']) )
 		{
-			$level = $this->extension['universalgroup']->getLevel($player->getName());
-			$group = $this->extension['universalgroup']->getGroup($level);
-			$val   = $this->getValue($group, 'group');
+			$level  = $this->extension['universalgroup']->getLevel($player->getName());
+			$level -= $level % 10;
+
+			$val = $this->getValue("$level", 'group');
 		}
 		
 		return $val;
