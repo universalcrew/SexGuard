@@ -327,6 +327,11 @@ class BlockGuard implements Listener
 			return FALSE;
 		}
 
+		if( $region->getFlagValue($flag) )
+		{
+			return FALSE;
+		}
+
 		$event = new FlagCheckByBlockEvent($api, $region, $flag, $block, $player);
 
 		$api->getServer()->getPluginManager()->callEvent($event);
@@ -356,11 +361,6 @@ class BlockGuard implements Listener
 					return FALSE;
 				}
 			}
-		}
-		
-		if( $region->getFlagValue($flag) )
-		{
-			return FALSE;
 		}
 		
 		if( !isset($player) )

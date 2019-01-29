@@ -449,6 +449,11 @@ class PlayerGuard implements Listener
 			return FALSE;
 		}
 
+		if( $region->getFlagValue($flag) )
+		{
+			return FALSE;
+		}
+
 		$val = $api->getGroupValue($player);
 		
 		if( in_array($flag, $val['ignored_flag']) )
@@ -466,11 +471,6 @@ class PlayerGuard implements Listener
 
 				return FALSE;
 			}
-		}
-		
-		if( $region->getFlagValue($flag) )
-		{
-			return FALSE;
 		}
 		
 		$nick = strtolower($player->getName());
