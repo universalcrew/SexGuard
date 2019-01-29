@@ -595,7 +595,7 @@ class Manager extends PluginBase
 	function getGroupValue( Player $player ): array
 	{
 		$val = $this->getValue('default', 'group');
-		
+
 		if( isset($this->extension['pureperms']) )
 		{
 			$group = $this->extension['pureperms']->getUserDataMgr()->getGroup($player)->getName();
@@ -604,12 +604,10 @@ class Manager extends PluginBase
 
 		if( isset($this->extension['universalgroup']) )
 		{
-			$level  = $this->extension['universalgroup']->getLevel($player->getName());
-			$level -= $level % 10;
-
-			$val = $this->getValue("$level", 'group');
+			$level = $this->extension['universalgroup']->getGroup($player->getName())->getLevel();
+			$val   = $this->getValue($level, 'group');
 		}
-		
+
 		return $val;
 	}
 
