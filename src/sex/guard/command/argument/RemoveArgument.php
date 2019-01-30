@@ -12,29 +12,15 @@
  * @link   http://universalcrew.ru
  *
  */
-use sex\guard\Manager;
+use sex\guard\command\argument\Argument;
+
 
 use pocketmine\Player;
 
 
-/**
- * @todo nothing.
- */
-class RemoveArgument
+class RemoveArgument extends Argument
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-
-	/**
-	 * @param Manager $api
-	 */
-	function __construct( Manager $api )
-	{
-		$this->api = $api;
-	}
+	const NAME = 'remove';
 
 
 	/**
@@ -53,30 +39,30 @@ class RemoveArgument
 	function execute( Player $sender, array $args ): bool
 	{
 		$nick = strtolower($sender->getName());
-		$api  = $this->api;
+		$main = $this->getManager();
 		
 		if( count($args) < 1 )
 		{
-			$sender->sendMessage($api->getValue('remove_help'));
+			$sender->sendMessage($main->getValue('remove_help'));
 			return FALSE;
 		}
 		
-		$region = $api->getRegionByName($args[0]);
+		$region = $main->getRegionByName($args[0]);
 
 		if( !isset($region) )
 		{
-			$sender->sendMessage($api->getValue('rg_not_exist'));
+			$sender->sendMessage($main->getValue('rg_not_exist'));
 			return FALSE;
 		}
 		
 		if( $region->getOwner() != $nick and !$sender->hasPermission('sexguard.all') )
 		{
-			$sender->sendMessage($api->getValue('player_not_owner'));
+			$sender->sendMessage($main->getValue('player_not_owner'));
 			return FALSE;
 		}
 		
-		$api->removeRegion($region->getRegionName());
-		$sender->sendMessage($api->getValue('rg_remove'));
+		$main->removeRegion($region->getRegionName());
+		$sender->sendMessage($main->getValue('rg_remove'));
 		return TRUE;
 	}
 }

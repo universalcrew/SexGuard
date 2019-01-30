@@ -24,17 +24,6 @@ use sex\guard\command\NewGuardCommand;
 use sex\guard\event\region\RegionCreateEvent;
 use sex\guard\event\region\RegionRemoveEvent;
 
-use sex\guard\command\argument\PositionOneArgument;
-use sex\guard\command\argument\PositionTwoArgument;
-use sex\guard\command\argument\PositionArgument;
-use sex\guard\command\argument\RemoveArgument;
-use sex\guard\command\argument\MemberArgument;
-use sex\guard\command\argument\CreateArgument;
-use sex\guard\command\argument\OwnerArgument;
-use sex\guard\command\argument\WandArgument;
-use sex\guard\command\argument\ListArgument;
-use sex\guard\command\argument\FlagArgument;
-
 use pocketmine\permission\Permission;
 use pocketmine\plugin\PluginBase;
 use pocketmine\level\Position;
@@ -604,8 +593,8 @@ class Manager extends PluginBase
 
 		if( isset($this->extension['universalgroup']) )
 		{
-			$level = $this->extension['universalgroup']->getGroup($player->getName())->getLevel();
-			$val   = $this->getValue($level, 'group');
+			$id  = $this->extension['universalgroup']->getGroup($player->getName())->getId();
+			$val = $this->getValue($id, 'group');
 		}
 
 		return $val;
@@ -629,7 +618,6 @@ class Manager extends PluginBase
 	private function initPermission( )
 	{
 		$list = [
-			new Permission('sexguard.command.rg', 'Доступ к команде /rg', Permission::DEFAULT_TRUE),
 			new Permission('sexguard.noflag', 'Игнорирование флагов внутри регионов', Permission::DEFAULT_OP),
 			new Permission('sexguard.all', 'Доступ ко всем функциям sexGuard', Permission::DEFAULT_OP)
 		];
@@ -694,43 +682,26 @@ class Manager extends PluginBase
 
 	private function initCommand( )
 	{
-		$list = [
-			'pos1'   => new PositionOneArgument($this),
-			'pos2'   => new PositionTwoArgument($this),
-			'pos'    => new PositionArgument($this),
-			'create' => new CreateArgument($this),
-			'claim'  => new CreateArgument($this),
-			'member' => new MemberArgument($this),
-			'remove' => new RemoveArgument($this),
-			'owner'  => new OwnerArgument($this),
-			'flag'   => new FlagArgument($this),
-			'list'   => new ListArgument($this),
-			'wand'   => new WandArgument($this)
-		];
-
-		$map     = $this->getServer()->getCommandMap();
-		$command = $map->getCommand('rg');
-
-		if( isset($command) )
-		{
-			$command->setLabel('');
-			$command->unregister($map);
-		}
-
 		try
 		{
-			$command = new OldGuardCommand($this, $list);
+			$command = new OldGuardCommand($this);
 		}
 
 		catch( Exception $exception )
 		{
-			$command = new NewGuardCommand($this, $list);
+			$command = new NewGuardCommand($this);
 		}
 
-		finally
+		$map     = $this->getServer()->getCommandMap();
+		$replace = $map->getCommand($command->getName());
+
+		if( isset($replace) )
 		{
-			$this->getServer()->getCommandMap()->register($this->getName(), $command);
+			$replace->setLabel('');
+			$replace->unregister($map);
 		}
+
+		$map->register($this->getName(), $command);
 	}
 
 

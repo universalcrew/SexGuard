@@ -1,5 +1,6 @@
 <?php namespace sex\guard\command;
 
+
 /**
  *  _    _       _                          _  ____
  * | |  | |_ __ (_)_    _____ _ ______ __ _| |/ ___\_ _______      __
@@ -12,41 +13,17 @@
  *
  */
 use sex\guard\Manager;
+use sex\guard\command\GuardCommand;
 
-use pocketmine\Player;
-use pocketmine\command\Command;
+
 use pocketmine\command\CommandSender;
+
 
 /**
  * @todo rewrite arguments and allow ConsoleCommandSender.
  */
-class OldGuardCommand extends Command
+class OldGuardCommand extends GuardCommand
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-	/**
-	 * @var Argument[]
-	 */
-	private $argument = [];
-
-
-	/**
-	 * @param Manager    $api
-	 * @param Argument[] $argument
-	 */
-	function __construct( Manager $api, array $argument )
-	{
-		$this->api      = $api;
-		$this->argument = $argument;
-		
-		parent::__construct('rg');
-		$this->setPermission('sexguard.command.rg');
-	}
-
-
 	/**
 	 *                                             _
 	 *   ___  ___  _ __ _  _ __ _   __ _ _ __   __| |
@@ -63,35 +40,6 @@ class OldGuardCommand extends Command
 	 */
 	function execute( CommandSender $sender, $label, array $args )
 	{
-		$api = $this->api;
-		
-		if( !($sender instanceof Player) )
-		{
-			$sender->sendMessage($api->getValue('no_console'));
-			return FALSE;
-		}
-		
-		if( !$this->testPermissionSilent($sender) )
-		{
-			$sender->sendMessage($api->getValue('no_permission'));
-			return FALSE;
-		}
-		
-		if( count($args) < 1 )
-		{
-			$sender->sendMessage($api->getValue('rg_help'));
-			return FALSE;
-		}
-		
-		$args = array_map('strtolower', $args);
-		$name = array_shift($args);
-		
-		if( !isset($this->argument[$name]) )
-		{
-			$sender->sendMessage($api->getValue('rg_help'));
-			return FALSE;
-		}
-		
-		return $this->argument[$name]->execute($sender, $args);
+		return $this->executeSafe($sender, $label, $args);
 	}
 }

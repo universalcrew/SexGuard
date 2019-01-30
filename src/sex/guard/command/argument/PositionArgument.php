@@ -12,30 +12,16 @@
  * @link   http://universalcrew.ru
  *
  */
-use sex\guard\Manager;
+use sex\guard\command\argument\Argument;
 
-use pocketmine\Player;
+
 use pocketmine\level\Position;
+use pocketmine\Player;
 
 
-/**
- * @todo nothing.
- */
-class PositionArgument
+class PositionArgument extends Argument
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-
-	/**
-	 * @param Manager $api
-	 */
-	function __construct( Manager $api )
-	{
-		$this->api = $api;
-	}
+	const NAME = 'pos';
 
 
 	/**
@@ -54,11 +40,11 @@ class PositionArgument
 	function execute( Player $sender, array $args ): bool
 	{
 		$nick = strtolower($sender->getName());
-		$api  = $this->api;
+		$main = $this->getManager();
 		
 		if( count($args) < 1 )
 		{
-			$sender->sendMessage($api->getValue('pos_help'));
+			$sender->sendMessage($main->getValue('pos_help'));
 			return FALSE;
 		}
 		
@@ -69,64 +55,64 @@ class PositionArgument
 			$sender->getLevel()
 		);
 
-		$region = $api->getRegion($pos);
+		$region = $main->getRegion($pos);
 		
 		if( $region !== NULL and !$sender->hasPermission('sexguard.all') )
 		{
 			if( $region->getOwner() != $nick )
 			{
-				$sender->sendMessage($api->getValue('rg_override'));
+				$sender->sendMessage($main->getValue('rg_override'));
 				return FALSE;
 			}
 		}
 		
 		if( $args[0] == '1' )
 		{
-			if( isset($api->position[1][$nick]) )
+			if( isset($main->position[1][$nick]) )
 			{
-				unset($api->position[1][$nick]);
+				unset($main->position[1][$nick]);
 			}
 			
-			$api->position[0][$nick] = $pos;
+			$main->position[0][$nick] = $pos;
 			
-			$sender->sendMessage($api->getValue('pos_1_set'));
+			$sender->sendMessage($main->getValue('pos_1_set'));
 			return TRUE;
 		}
 
 		elseif( $args[0] == '2' )
 		{
-			if( !isset($api->position[0][$nick]) )
+			if( !isset($main->position[0][$nick]) )
 			{
-				$sender->sendMessage($api->getValue('pos_help'));
+				$sender->sendMessage($main->getValue('pos_help'));
 				return FALSE;
 			}
 			
-			if( $api->position[0][$nick]->getLevel()->getName() != $sender->getLevel()->getName() )
+			if( $main->position[0][$nick]->getLevel()->getName() != $sender->getLevel()->getName() )
 			{
-				unset($api->position[0][$nick]);
-				$sender->sendMessage($api->getValue('pos_another_world'));
+				unset($main->position[0][$nick]);
+				$sender->sendMessage($main->getValue('pos_another_world'));
 				return FALSE;
 			}
 			
-			$val  = $api->getGroupValue($sender);
-			$size = $api->calculateSize($api->position[0][$nick], $pos);
+			$val  = $main->getGroupValue($sender);
+			$size = $main->calculateSize($main->position[0][$nick], $pos);
 			
 			if( $size > $val['max_size'] and !$sender->hasPermission('sexguard.all') )
 			{
-				$sender->sendMessage(str_replace('{max_size}', $val['max_size'], $api->getValue('rg_oversize')));
+				$sender->sendMessage(str_replace('{max_size}', $val['max_size'], $main->getValue('rg_oversize')));
 				return FALSE;
 			}
 			
-			$api->position[1][$nick] = $pos;
+			$main->position[1][$nick] = $pos;
 			
-			$sender->sendMessage($api->getValue('pos_2_set'));
+			$sender->sendMessage($main->getValue('pos_2_set'));
 			return TRUE;
 		}
 
 		else
 		{
 			
-			$sender->sendMessage($api->getValue('pos_help'));
+			$sender->sendMessage($main->getValue('pos_help'));
 			return FALSE;
 		}
 	}

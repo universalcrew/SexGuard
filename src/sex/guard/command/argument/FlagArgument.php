@@ -12,29 +12,15 @@
  * @link   http://universalcrew.ru
  *
  */
-use sex\guard\Manager;
+use sex\guard\command\argument\Argument;
+
 
 use pocketmine\Player;
 
 
-/**
- * @todo nothing.
- */
-class FlagArgument
+class FlagArgument extends Argument
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-
-	/**
-	 * @param Manager $api
-	 */
-	function __construct( Manager $api )
-	{
-		$this->api = $api;
-	}
+	const NAME = 'flag';
 
 
 	/**
@@ -53,49 +39,49 @@ class FlagArgument
 	function execute( Player $sender, array $args ): bool
 	{
 		$nick = strtolower($sender->getName());
-		$api  = $this->api;
-		$list = $api->getAllowedFlag();
-		
+		$main = $this->getManager();
+		$list = $main->getAllowedFlag();
+
 		if( count($args) < 2 )
 		{
-			$sender->sendMessage(str_replace('{flag_list}', implode(' ', $list), $api->getValue('flag_help')));
+			$sender->sendMessage(str_replace('{flag_list}', implode(' ', $list), $main->getValue('flag_help')));
 			return FALSE;
 		}
 
-		$region = $api->getRegionByName($args[0]);
+		$region = $main->getRegionByName($args[0]);
 
 		if( !isset($region) )
 		{
-			$sender->sendMessage($api->getValue('rg_not_exist'));
+			$sender->sendMessage($main->getValue('rg_not_exist'));
 			return FALSE;
 		}
-		
+
 		if( $region->getOwner() != $nick and !$sender->hasPermission('sexguard.all') )
 		{
-			$sender->sendMessage($api->getValue('player_not_owner'));
+			$sender->sendMessage($main->getValue('player_not_owner'));
 			return FALSE;
 		}
-		
+
 		$flag = $args[1];
-		
+
 		if( !in_array($flag, $list) )
 		{
-			$sender->sendMessage($api->getValue('flag_not_exist'));
+			$sender->sendMessage($main->getValue('flag_not_exist'));
 			return FALSE;
 		}
-		
+
 		if( $region->getFlagValue($flag) )
 		{
 			$region->setFlag($flag, FALSE);
-			$sender->sendMessage(str_replace('{flag}', $flag, $api->getValue('flag_off')));
+			$sender->sendMessage(str_replace('{flag}', $flag, $main->getValue('flag_off')));
 		}
 
 		else
 		{
 			$region->setFlag($flag, TRUE);
-			$sender->sendMessage(str_replace('{flag}', $flag, $api->getValue('flag_on')));
+			$sender->sendMessage(str_replace('{flag}', $flag, $main->getValue('flag_on')));
 		}
-		
+
 		return TRUE;
 	}
 }

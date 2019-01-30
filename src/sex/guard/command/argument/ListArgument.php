@@ -12,30 +12,16 @@
  * @link   http://universalcrew.ru
  *
  */
-use sex\guard\Manager;
+use sex\guard\command\argument\Argument;
 
-use pocketmine\Player;
+
 use pocketmine\item\Item;
+use pocketmine\Player;
 
 
-/**
- * @todo nothing.
- */
-class ListArgument
+class ListArgument extends Argument
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-
-	/**
-	 * @param Manager $api
-	 */
-	function __construct( Manager $api )
-	{
-		$this->api = $api;
-	}
+	const NAME = 'list';
 
 
 	/**
@@ -53,12 +39,12 @@ class ListArgument
 	 */
 	function execute( Player $sender, array $args ): bool
 	{
-		$api  = $this->api;
-		$list = $api->getRegionList($sender->getName());
+		$main = $this->getManager();
+		$list = $main->getRegionList($sender->getName());
 
 		if( count($list) < 1 )
 		{
-			$sender->sendMessage($api->getValue('list_empty'));
+			$sender->sendMessage($main->getValue('list_empty'));
 			return TRUE;
 		}
 
@@ -69,7 +55,7 @@ class ListArgument
 			$name[] = $region->getRegionName();
 		}
 
-		$message = $api->getValue('list_success');
+		$message = $main->getValue('list_success');
 		$message = str_replace('{list}', implode(', ', $name), $message);
 
 		$sender->sendMessage($message);

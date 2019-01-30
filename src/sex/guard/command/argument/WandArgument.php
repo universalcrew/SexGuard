@@ -12,27 +12,16 @@
  * @link   http://universalcrew.ru
  *
  */
-use sex\guard\Manager;
+use sex\guard\command\argument\Argument;
 
-use pocketmine\Player;
+
 use pocketmine\item\Item;
+use pocketmine\Player;
 
 
-class WandArgument
+class WandArgument extends Argument
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-
-	/**
-	 * @param Manager $api
-	 */
-	function __construct( Manager $api )
-	{
-		$this->api = $api;
-	}
+	const NAME = 'wand';
 
 
 	/**
@@ -50,17 +39,17 @@ class WandArgument
 	 */
 	function execute( Player $sender, array $args ): bool
 	{
-		$api  = $this->api;
+		$main = $this->getManager();
 		$wand = Item::get(Item::WOODEN_AXE);
-		
+
 		if( !$sender->getInventory()->canAddItem($wand) )
 		{
-			$sender->sendMessage($api->getValue('inventory_oversize'));
+			$sender->sendMessage($main->getValue('inventory_oversize'));
 			return FALSE;
 		}
-		
+
 		$sender->getInventory()->addItem($wand);
-		$sender->sendMessage($api->getValue('got_wand'));
+		$sender->sendMessage($main->getValue('got_wand'));
 		return TRUE;
 	}
 }

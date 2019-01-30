@@ -12,15 +12,48 @@
  * @link   http://universalcrew.ru
  *
  */
-use pocketmine\command\CommandSender;
+use sex\guard\Manager;
 
 
-interface Argument
+use pocketmine\Player;
+
+
+abstract class Argument
 {
+	const NAME = '';
+
+
 	/**
-	 * @param Manager $api
+	 * @var Manager
 	 */
-	function __construct( Manager $api );
+	private $main;
+
+
+	/**
+	 * @param Manager $main
+	 */
+	function __construct( Manager $main )
+	{
+		$this->main = $main;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	function getName( )
+	{
+		return static::NAME;
+	}
+
+
+	/**
+	 * @return Manager
+	 */
+	function getManager( )
+	{
+		return $this->main;
+	}
 
 
 	/**
@@ -36,5 +69,5 @@ interface Argument
 	 *
 	 * @return bool
 	 */
-	function execute( Player $sender, array $args ): bool;
+	abstract function execute( Player $sender, array $args ): bool;
 }

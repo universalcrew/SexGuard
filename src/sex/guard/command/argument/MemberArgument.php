@@ -12,29 +12,15 @@
  * @link   http://universalcrew.ru
  *
  */
-use sex\guard\Manager;
+use sex\guard\command\argument\Argument;
+
 
 use pocketmine\Player;
 
 
-/**
- * @todo nothing.
- */
-class MemberArgument
+class MemberArgument extends Argument
 {
-	/**
-	 * @var Manager
-	 */
-	private $api;
-
-
-	/**
-	 * @param Manager $api
-	 */
-	function __construct( Manager $api )
-	{
-		$this->api = $api;
-	}
+	const NAME = 'member';
 
 
 	/**
@@ -53,61 +39,60 @@ class MemberArgument
 	function execute( Player $sender, array $args ): bool
 	{
 		$nick = strtolower($sender->getName());
-		$api  = $this->api;
-		
+		$main = $this->getManager();
+
 		if( count($args) < 3 or !in_array($args[0], ['add', 'remove']) )
 		{
-			$sender->sendMessage($api->getValue('member_help'));
+			$sender->sendMessage($main->getValue('member_help'));
 			return FALSE;
 		}
-		
-		$region = $api->getRegionByName($args[1]);
+
+		$region = $main->getRegionByName($args[1]);
 
 		if( !isset($region) )
 		{
-			$sender->sendMessage($api->getValue('rg_not_exist'));
+			$sender->sendMessage($main->getValue('rg_not_exist'));
 			return FALSE;
 		}
-		
+
 		if( !isset($region) )
 		{
-			$sender->sendMessage($api->getValue('rg_not_exist'));
+			$sender->sendMessage($main->getValue('rg_not_exist'));
 			return FALSE;
 		}
-		
+
 		if( $region->getOwner() != $nick and !$sender->hasPermission('sexguard.all') )
 		{
-			$sender->sendMessage($api->getValue('player_not_owner'));
+			$sender->sendMessage($main->getValue('player_not_owner'));
 			return FALSE;
 		}
-		
+
 		$member = $args[2];
-		
+
 		if( $args[0] == 'add' )
 		{
 			if( in_array($member, $region->getMemberList()) )
 			{
-				$sender->sendMessage($api->getValue('player_already_member'));
+				$sender->sendMessage($main->getValue('player_already_member'));
 				return FALSE;
 			}
-			
+
 			$region->addMember($member);
-			$sender->sendMessage(str_replace('{player}', $member, $api->getValue('member_add')));
+			$sender->sendMessage(str_replace('{player}', $member, $main->getValue('member_add')));
 		}
 
 		else
 		{
-			
 			if( !in_array($member, $region->getMemberList()) )
 			{
-				$sender->sendMessage($api->getValue('player_not_exist'));
+				$sender->sendMessage($main->getValue('player_not_exist'));
 				return FALSE;
 			}
-			
+
 			$region->removeMember($member);
-			$sender->sendMessage(str_replace('{player}', $member, $api->getValue('member_remove')));
+			$sender->sendMessage(str_replace('{player}', $member, $main->getValue('member_remove')));
 		}
-		
+
 		return TRUE;
 	}
 }
