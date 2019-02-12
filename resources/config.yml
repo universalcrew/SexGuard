@@ -37,7 +37,7 @@
 #   удалите его - он восстановится
 #   при включении плагина.
 ###
-sign: 9d3c44979d4e3d0d3f5fe14a268f5791
+sign: e1814edea3c42ed4f53e326f7a396d18
 
 
 ###
@@ -161,6 +161,7 @@ warn_type: 2
 ###
 # INTERACT: открывание жел. дверей, нажатие кнопок и т.п.
 # TELEPORT: телепортация из региона.
+# COMBUST:  возгорание существ.
 # EXPLODE:  любые взрывы внутри региона.
 # CHANGE:   изменение региона существами (падающий песок и т.п.).
 # BUCKET:   использование ведер.
@@ -188,6 +189,7 @@ warn_type: 2
 allowed_flag:
   interact: true
   teleport: true
+  combust: false
   explode: false
   change: false
   bucket: false

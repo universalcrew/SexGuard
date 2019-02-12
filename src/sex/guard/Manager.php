@@ -43,11 +43,12 @@ use Exception;
  */
 class Manager extends PluginBase
 {
-	const CONFIGURATION_SIGN = '9d3c44979d4e3d0d3f5fe14a268f5791';
+	const CONFIGURATION_SIGN = 'e1814edea3c42ed4f53e326f7a396d18';
 
 	const DEFAULT_FLAG = [
 		'interact' => TRUE,
 		'teleport' => TRUE,
+		'combust'  => FALSE,
 		'explode'  => FALSE,
 		'change'   => FALSE,
 		'bucket'   => FALSE,

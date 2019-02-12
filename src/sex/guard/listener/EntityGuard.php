@@ -21,6 +21,7 @@ use pocketmine\entity\Entity;
 
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityCombustEvent;
 use pocketmine\event\entity\EntityExplodeEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\entity\EntityBlockChangeEvent;
@@ -95,6 +96,30 @@ class EntityGuard implements Listener
 		}
 
 		if( $this->isFlagDenied($entity, 'damage') )
+		{
+			$event->setCancelled();
+		}
+	}
+
+
+	/**
+	 * @internal combust flag.
+	 *
+	 * @param    EntityCombustEvent $event
+	 *
+	 * @priority        NORMAL
+	 * @ignoreCancelled FALSE
+	 */
+	function onCombust( EntityCombustEvent $event )
+	{
+		if( $event->isCancelled() )
+		{
+			return;
+		}
+		
+		$entity = $event->getEntity();
+		
+		if( $this->isFlagDenied($entity, 'combust') )
 		{
 			$event->setCancelled();
 		}

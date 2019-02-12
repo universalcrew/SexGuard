@@ -166,6 +166,7 @@ sell_exist: "§l§c- §fGUARD §c- Табличка продажи для это
 # СООБЩЕНИЯ О ЗАПРЕТЕ ДЕЙСТВИЙ:
 #   warn_flag_interact: запрещено нажимать на что-либо
 #   warn_flag_teleport: запрещено телепортироваться
+#   warn_flag_combust: запрещено возгораться (?)
 #   warn_flag_bucket: запрещено использовать ведра
 #   warn_flag_damage: урон от внешнего мира не получен
 #   warn_flag_chest: запрещено использовать сундуки
@@ -180,6 +181,7 @@ sell_exist: "§l§c- §fGUARD §c- Табличка продажи для это
 #   warn_safe_mode: запрещено изменять мир
 warn_flag_interact: ""
 warn_flag_teleport: "§l§c- §fGUARD §c- Телепортация в данном регионе ограничена§r"
+warn_flag_combust: ""
 warn_flag_bucket: "§l§c- §fGUARD §c- Использование ведер в данном регионе ограничено§r"
 warn_flag_damage: ""
 warn_flag_chest: "§l§c- §fGUARD §c- Использование сундуков в данном регионе ограничено§r"
