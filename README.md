@@ -1,5 +1,7 @@
 ![SexGuard](https://raw.githubusercontent.com/universalcrew/SexGuard/master/sexguard.jpg)
 
+[![Poggit-CI](https://poggit.pmmp.io/ci.badge/universalcrew/SexGuard/SexGuard)](https://poggit.pmmp.io/ci/universalcrew/SexGuard/SexGuard)
+
 # Language: [English](#ENG) | [Русский](#RUS)
 
 <a name="ENG"></a>
