@@ -8,7 +8,7 @@
 ###
 name: SexGuard
 main: sex\guard\Manager
-version: 1.1.8
+version: 1.1.9
 api:
 - 1.0.0
 - 2.0.0

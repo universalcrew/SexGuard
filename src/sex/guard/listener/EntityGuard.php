@@ -25,6 +25,7 @@ use pocketmine\event\entity\EntityCombustEvent;
 use pocketmine\event\entity\EntityExplodeEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\entity\EntityBlockChangeEvent;
+use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 
@@ -57,7 +58,9 @@ class EntityGuard implements Listener
 	 * |_|_|___/|___\___|_| |_|\___|_|
 	 *
 	 *
-	 * @internal pvp flag.
+	 * @internal pvp    flag.
+	 *           mob    flag.
+	 *           damage flag.
 	 *
 	 * @param    EntityDamageEvent $event
 	 *
@@ -76,18 +79,14 @@ class EntityGuard implements Listener
 		if( $event instanceof EntityDamageByEntityEvent )
 		{
 			$damager = $event->getDamager();
+			$flag    = 'mob';
 
 			if( $entity instanceof Player and $damager instanceof Player )
 			{
-				if( $this->isFlagDenied($damager, 'pvp', $entity) )
-				{
-					$event->setCancelled();
-				}
-
-				return;
+				$flag = 'pvp';
 			}
 
-			if( $this->isFlagDenied($damager, 'mob', $entity) )
+			if( $this->isFlagDenied($damager, $flag, $entity) )
 			{
 				$event->setCancelled();
 			}
@@ -98,6 +97,33 @@ class EntityGuard implements Listener
 		if( $this->isFlagDenied($entity, 'damage') )
 		{
 			$event->setCancelled();
+		}
+	}
+
+
+	/**
+	 * @internal mob flag.
+	 *
+	 * @param    ProjectileHitEntityEvent $event
+	 *
+	 * @priority NORMAL
+	 */
+	function onProjectileHit( ProjectileHitEntityEvent $event )
+	{
+		$entity     = $event->getEntityHit();
+		$projectile = $event->getEntity();
+		$damager    = $projectile->getOwningEntity() ?? $projectile;
+
+		$flag = 'mob';
+
+		if( $entity instanceof Player and $damager instanceof Player )
+		{
+			$flag = 'pvp';
+		}
+
+		if( $this->isFlagDenied($damager, $flag, $entity) )
+		{
+			$event->getEntity()->setPunchKnockback(0.00);
 		}
 	}
 
