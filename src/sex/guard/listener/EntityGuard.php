@@ -18,6 +18,7 @@ use sex\guard\event\flag\FlagCheckByEntityEvent;
 
 use pocketmine\Player;
 use pocketmine\entity\Entity;
+use pocketmine\entity\projectile\Arrow;
 
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -79,12 +80,7 @@ class EntityGuard implements Listener
 		if( $event instanceof EntityDamageByEntityEvent )
 		{
 			$damager = $event->getDamager();
-			$flag    = 'mob';
-
-			if( $entity instanceof Player and $damager instanceof Player )
-			{
-				$flag = 'pvp';
-			}
+			$flag    = ($entity instanceof Player and $damager instanceof Player) ? 'pvp' : 'mob';
 
 			if( $this->isFlagDenied($damager, $flag, $entity) )
 			{
@@ -110,16 +106,17 @@ class EntityGuard implements Listener
 	 */
 	function onProjectileHit( ProjectileHitEntityEvent $event )
 	{
-		$entity     = $event->getEntityHit();
 		$projectile = $event->getEntity();
-		$damager    = $projectile->getOwningEntity() ?? $projectile;
 
-		$flag = 'mob';
-
-		if( $entity instanceof Player and $damager instanceof Player )
+		if( !($projectile instanceof Arrow) )
 		{
-			$flag = 'pvp';
+			return;
 		}
+
+		$entity  = $event->getEntityHit();
+		$damager = $projectile->getOwningEntity() ?? $projectile;
+
+		$flag = ($entity instanceof Player and $damager instanceof Player) ? 'pvp' : 'mob';
 
 		if( $this->isFlagDenied($damager, $flag, $entity) )
 		{
