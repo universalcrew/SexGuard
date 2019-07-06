@@ -43,7 +43,7 @@ use Exception;
  */
 class Manager extends PluginBase
 {
-	const CONFIGURATION_SIGN = 'e1814edea3c42ed4f53e326f7a396d18';
+	const CONFIGURATION_SIGN = '57acd4638281a87d3b552a7e9cd06dff';
 
 	const DEFAULT_FLAG = [
 		'interact' => TRUE,
@@ -314,7 +314,7 @@ class Manager extends PluginBase
 				'y' => $max_y ?? $max->getY(),
 				'z' => $max->getZ()
 			],
-			'flag'   => $this->getValue('allowed_flag', 'config')
+			'flag'   => $this->getValue('default_flag', 'config')
 		];
 
 		$region = new Region($name, $data);
@@ -539,19 +539,19 @@ class Manager extends PluginBase
 	 */
 	function getAllowedFlag( ): array
 	{
-		$flag = array_map('strtolower', array_keys($this->getValue('allowed_flag', 'config')));
+		$list = array_map('strtolower', $this->getValue('allowed_flag', 'config'));
 
-		foreach( $flag as $key )
+		foreach( $list as $flag )
 		{
-			if( isset(self::DEFAULT_FLAG[$key]) )
+			if( isset(self::DEFAULT_FLAG[$flag]) )
 			{
 				continue;
 			}
 
-			unset($flag[$key]);
+			unset($list[$flag]);
 		}
 
-		return $flag;
+		return $list;
 	}
 
 
