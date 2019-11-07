@@ -21,7 +21,7 @@ This plugin works only on PHP >= 7.0 and PocketMine-MP server software or any fo
 
 - Regions search system allows owners to create region in bigger region for comfortable markup of areas;
 - Ability to fine tune parameters of regions (flags), you can prevent players to using certain flags;
-- Ability to tune parameters of size and count of regions per-player, also list of ignored flag and protected regions for certain groups from PurePerms and UniversalGroup;
+- Ability to tune parameters of size and count of regions per-player, also list of ignored flag and protected regions for certain groups from PurePerms, UniversalGroup and SexGroup;
 - Ability to sell regions through the place of sign with using EconomyAPI or UniversalMoney;
 - Ability to change every message.
 
@@ -54,7 +54,7 @@ Telegram: https://t.me/joinchat/EbZB3BKGfstWw6UwYaBKHQ
 
 - Система поиска регионов позволяет владельцам вкладывать регионы друг в друга для более удобной разметки областей;
 - Возможность тонкой настройки параметров регионов (флагов), запрет использования отдельных из них для игроков;
-- Возможность настройки размеров и количества регионов, а также список игнорируемых флагов и список защищенных регионов для каждой из доступных групп PurePerms и UniversalGroup;
+- Возможность настройки размеров и количества регионов, а также список игнорируемых флагов и список защищенных регионов для каждой из доступных групп PurePerms, UniversalGroup и SexGroup;
 - Возможность продажи регионов посредством размещения таблички, используя EconomyAPI или UniversalMoney.
 - Настройка абсолютно каждого сообщения.
 

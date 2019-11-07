@@ -37,7 +37,7 @@
 #   удалите его - он восстановится
 #   при включении плагина.
 ###
-sign: 57acd4638281a87d3b552a7e9cd06dff
+sign: 5bfa52e5eed0d57dee1f33cd435eb988
 
 
 ###
@@ -60,6 +60,14 @@ allow_pureperms: false
 # РАЗРЕШИТЬ: true
 # ЗАПРЕТИТЬ: false
 allow_universalgroup: false
+###
+# СВЯЗЬ С SexGroup:
+#   Разрешить плагину работать с альтернативным
+#   менеджером групп.
+###
+# РАЗРЕШИТЬ: true
+# ЗАПРЕТИТЬ: false
+allow_sexgroup: false
 
 
 ###

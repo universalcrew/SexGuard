@@ -43,7 +43,7 @@ use Exception;
  */
 class Manager extends PluginBase
 {
-	const CONFIGURATION_SIGN = '57acd4638281a87d3b552a7e9cd06dff';
+	const CONFIGURATION_SIGN = '5bfa52e5eed0d57dee1f33cd435eb988';
 
 	const DEFAULT_FLAG = [
 		'interact' => TRUE,
@@ -584,21 +584,22 @@ class Manager extends PluginBase
 	 */
 	function getGroupValue( Player $player ): array
 	{
-		$val = $this->getValue('default', 'group');
-
 		if( isset($this->extension['pureperms']) )
 		{
 			$group = $this->extension['pureperms']->getUserDataMgr()->getGroup($player)->getName();
-			$val   = $this->getValue($group, 'group');
 		}
 
-		if( isset($this->extension['universalgroup']) )
+		elseif( isset($this->extension['universalgroup']) )
 		{
-			$id  = $this->extension['universalgroup']->getGroup($player->getName())->getId();
-			$val = $this->getValue($id, 'group');
+			$group = $this->extension['universalgroup']->getGroup($player->getName())->getId();
 		}
 
-		return $val;
+		elseif( isset($this->extension['sexgroup']) )
+		{
+			$group = $this->extension['sexgroup']->getPlayerGroup($player->getName())->getId();
+		}
+
+		return $this->getValue($group ?? 'default', 'group');
 	}
 
 
@@ -712,7 +713,8 @@ class Manager extends PluginBase
 			'PurePerms',
 			'EconomyAPI',
 			'UniversalGroup',
-			'UniversalMoney'
+			'UniversalMoney',
+			'SexGroup'
 		];
 		
 		foreach( $list as $extension )
