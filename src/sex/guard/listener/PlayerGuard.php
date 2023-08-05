@@ -109,223 +109,158 @@ class PlayerGuard implements Listener
 	 * @priority        NORMAL
 	 * @ignoreCancelled FALSE
 	 */
-	function onTouch( PlayerInteractEvent $event )
-	{
-		if( $event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK )
-		{
-			return; // thx Yexeed.
-		}
+    function onTouch( PlayerInteractEvent $event )
+    {
+        if( $event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK )
+        {
+            return; // thx Yexeed.
+        }
 
-		if( $event->isCancelled() )
-		{
-			return;
-		}
-		
-		$player = $event->getPlayer();
-		$block  = $event->getBlock();
-		$nick   = strtolower($player->getName());
-		$api    = $this->api;
-		
-		if( $block->getId() == Block::SIGN_POST or $block->getId() == Block::WALL_SIGN )
-		{
-			if( count($api->sign->getAll()) == 0 or $api->getValue('allow_sell', 'config') === FALSE )
-			{
-				return;
-			}
-			
-			foreach( $api->sign->getAll() as $name => $data )
-			{
-				$pos = new Vector3($data['pos'][0], $data['pos'][1], $data['pos'][2]);
-				$lvl = $data['level'];
-				
-				if( $block->equals($pos) and $block->getLevel()->getName() == $lvl )
-				{
-					if( isset($api->extension['economyapi']) )
-					{
-						$economy = $api->extension['economyapi'];
-						$money   = $economy->myMoney($nick);
-					}
+        if( $event->isCancelled() )
+        {
+            return;
+        }
 
-					if( isset($api->extension['universalmoney']) )
-					{
-						$economy = $api->extension['universalmoney'];
-						$money   = $economy->getMoney($nick);
-					}
-					
-					if( !isset($economy) )
-					{
-						return;
-					}
-					
-					$region = $api->getRegion($block);
-					
-					if( !isset($region) )
-					{
-						return;
-					}
-					
-					if( $nick == $region->getOwner() )
-					{
-						$api->sendWarning($player, $api->getValue('player_already_owner'));
-						return;
-					}
-					
-					$val = $api->getGroupValue($player);
-					
-					if( count($api->getRegionList($nick)) > $val['max_count'] )
-					{
-						$api->sendWarning($player, str_replace('{max_count}', $val['max_count'], $api->getValue('rg_overcount')));
-						return;
-					}
+        $player = $event->getPlayer();
+        $block  = $event->getBlock();
+        $nick   = strtolower($player->getName());
+        $api    = $this->api;
 
-					$price = intval($data['price']);
+        if( $block->getId() == Block::SIGN_POST or $block->getId() == Block::WALL_SIGN )
+        {
+            if ($api->getValue('allow_sell', 'config') === FALSE )
+            {
+                return;
+            }
 
-					if( $money < $price )
-					{
-						$api->sendWarning($player, str_replace('{price}', $price, $api->getValue('player_have_not_money')));
-						return;
-					}
-					
-					$economy->reduceMoney($nick, $price);
-					$economy->addMoney($region->getOwner(), $price);
+            $api->getProvider()->buyRegionAt($block, $player);
+            return;
+        }
 
-					$region->setOwner($nick);
-					$block->getLevel()->setBlock($pos, Block::get(Block::AIR));
+        $item = $event->getItem();
 
-					$api->sign->remove($name);
-					$api->sign->save(TRUE);
-					
-					$api->sendWarning($player, str_replace('{region}', $region->getRegionName(), $api->getValue('player_buy_rg')));
-					break;
-				}
-			}
-			
-			return;
-		}
-		
-		$item = $event->getItem();
-		
-		if( $item->getId() == Item::STICK )
-		{
-			$event->setCancelled();
+        if( $item->getId() == Item::STICK && $player->getLevel()->getName() === "world" )
+        {
+            $event->setCancelled();
 
-			$region = $api->getRegion($block);
-			
-			if( !isset($region) )
-			{
-				$api->sendWarning($player, $api->getValue('rg_not_exist'));
-				return;
-			}
-			
-			$msg = str_replace('{region}', $region->getRegionName(), $api->getValue('rg_info'));
-			$msg = str_replace('{owner}',  $region->getOwner(), $msg);
-			$msg = str_replace('{member}', implode(' ', $region->getMemberList()), $msg);
-			
-			$api->sendWarning($player, $msg);
-			return;
-		}
+            $region = $api->getRegion($block);
 
-		if( $item->getId() == Item::WOODEN_AXE )
-		{
-			$event->setCancelled();
+            if( !isset($region) )
+            {
+                $api->sendWarning($player, $api->getValue('rg_not_exist'));
+                return;
+            }
 
-			$region = $api->getRegion($block);
+            $msg = str_replace('{region}', $region->getRegionName(), $api->getValue('rg_info'));
+            $msg = str_replace('{owner}',  $region->getOwner(), $msg);
+            $msg = str_replace('{member}', implode(' ', $region->getMemberList()), $msg);
 
-			if( $region !== NULL and !$player->hasPermission('sexguard.all') )
-			{
-				if( $region->getOwner() != $nick )
-				{
-					$api->sendWarning($player, $api->getValue('rg_override'));
-					return;
-				}
-			}
-			
-			if( !isset($api->position[0][$nick]) )
-			{
-				$api->position[0][$nick] = $block;
-				
-				$api->sendWarning($player, $api->getValue('pos_1_set'));
-				return;
-			}
-			
-			if( !isset($api->position[1][$nick]) )
-			{
-				if( $api->position[0][$nick]->getLevel()->getName() != $block->getLevel()->getName() )
-				{
-					unset($api->position[0][$nick]);
-					$api->sendWarning($player, $api->getValue('pos_another_world'));
-					return;
-				}
-				
-				$val  = $api->getGroupValue($player);
-				$size = $api->calculateSize($api->position[0][$nick], $block);
-				
-				if( $size > $val['max_size'] and !$player->hasPermission('sexguard.all') )
-				{
-					$msg = str_replace('{max_size}', $val['max_size'], $api->getValue('rg_oversize'));
-					
-					$api->sendWarning($player, $msg);
-					return;
-				}
-				
-				$api->position[1][$nick] = $block;
-				
-				$api->sendWarning($player, $api->getValue('pos_2_set'));
-				return;
-			}
-			
-			if( isset($api->position[0][$nick]) and isset($api->position[1][$nick]) )
-			{
-				$api->position[0][$nick] = $block;
-				
-				unset($api->position[1][$nick]);
-				$api->sendWarning($player, $api->getValue('pos_1_set'));
-				return;
-			}
-		}
+            $api->sendWarning($player, "§fРЕГИОН: §c" .$region->getRegionName() . "§f | §fВЛАДЕЛЕЦ: §c" . $region->getOwner());
+            if(implode(' ', $region->getMemberList()) !== "") {
+                $player->sendMessage("\n" . $msg . "\n");
+            } else $player->sendMessage("\n" . str_replace('{region}', $region->getRegionName(), $api->getValue('rg_infonotmember')) . "\n");
+            return;
+        }
 
-		$flag = 'interact';
+        if( $item->getId() == Item::WOODEN_AXE && $player->getLevel()->getName() === "world" )
+        {
+            $event->setCancelled();
 
-		if( $block->getId() == Block::CHEST )
-		{
-			$flag = 'chest';
-		}
+            $region = $api->getRegion($block);
+            //регион в регионе
+            if( $region !== NULL and !$player->hasPermission('sexguard.all') )
+            {
+                if( $region->getOwner() != $nick )
+                {
+                    $api->sendWarning($player, $api->getValue('rg_override'));
+                    return;
+                }
+                // Region within a region
+                /*
+                 * else {
+                    $api->sendWarning($player, $api->getValue('rg_overrideyour'));
+                    return;
+                }
+                */
+            }
 
-		if( $block->getId() == Block::ITEM_FRAME_BLOCK )
-		{
-			$flag = 'frame';
-		}
+            if( !isset($api->position[0][$nick]) )
+            {
+                $api->position[0][$nick] = $block;
 
-		if( $block->getId() == Block::GRASS )
-		{
-			$list = [
-				Item::WOODEN_SHOVEL,
-				Item::STONE_SHOVEL,
-				Item::IRON_SHOVEL,
-				Item::GOLD_SHOVEL,
-				Item::DIAMOND_SHOVEL,
+                $api->sendWarning($player, $api->getValue('pos_1_setw'));
+                return;
+            }
 
-				Item::WOODEN_HOE,
-				Item::STONE_HOE,
-				Item::IRON_HOE,
-				Item::GOLD_HOE,
-				Item::DIAMOND_HOE
-			];
+            if( !isset($api->position[1][$nick]) )
+            {
+                	if( $api->position[0][$nick]->getLevel()->getName() != $block->getLevel()->getName())
+                		{
+                			unset($api->position[0][$nick]);
+                				$api->sendWarning($player, $api->getValue('pos_another_world'));
+                				return;
+                			}
 
-			if( in_array($item->getId(), $list) )
-			{
-				/**
-				 * @todo break?
-				 */
-				$flag = 'break';
-			}
-		}
-		
-		if( $this->isFlagDenied($player, $flag, $block) )
-		{
-			$event->setCancelled();
-		}
-	}
+                $val  = $api->getGroupValue($player);
+                $size = $api->calculateSize($api->position[0][$nick], $block);
+
+                if( $size > $val['max_size'] and !$player->hasPermission('sexguard.all') )
+                {
+                    $msg = str_replace('{max_size}', $val['max_size'], $api->getValue('rg_oversize'));
+
+                    $api->sendWarning($player, $msg);
+                    return;
+                }
+
+                $api->position[1][$nick] = $block;
+
+                $api->sendWarning($player, $api->getValue('pos_2_setw'));
+                return;
+            }
+
+            if( isset($api->position[0][$nick]) and isset($api->position[1][$nick]) )
+            {
+                $api->position[0][$nick] = $block;
+
+                unset($api->position[1][$nick]);
+                $api->sendWarning($player, $api->getValue('pos_1_set'));
+                return;
+            }
+        }
+
+        $flag = 'interact';
+
+        if( $block->getId() == Block::CHEST or $block->getId() == Block::TRAPPED_CHEST or $block->getId() == Block::FURNACE)
+        {
+            $flag = 'chest';
+        }
+
+        if( $block->getId() == Block::ITEM_FRAME_BLOCK )
+        {
+            $flag = 'frame';
+        }
+
+        if( $block->getId() == Block::GRASS )
+        {
+            if($event->getItem()->isShovel() or $event->getItem()->isHoe()  or $event->getItem()->getId() === 351 and $event->getItem()->getDamage() === 0x0F){
+                $flag = 'break';
+            }
+
+
+
+
+        }
+
+        if($block->getId() === 96)
+        {
+            $flag = 'break';
+        }
+
+        if( $this->isFlagDenied($player, $flag, $block) )
+        {
+            $event->setCancelled();
+        }
+    }
 
 
 	/**
